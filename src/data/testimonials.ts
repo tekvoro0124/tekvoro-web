@@ -1,0 +1,42 @@
+export const testimonials = [
+  {
+    id: 1,
+    name: 'Rajesh Kumar',
+    position: 'Home Owner',
+    quote: 'The water quality is exceptional! Best investment for my family\'s health.',
+    rating: 5,
+    avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 2,
+    name: 'Priya Sharma',
+    position: 'Restaurant Owner',
+    quote: 'Tekvoro\'s commercial solutions have been perfect for our restaurant needs.',
+    rating: 4,
+    avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 3,
+    name: 'Arun Reddy',
+    position: 'Office Manager',
+    quote: 'Excellent service and maintenance support. Highly recommended!',
+    rating: 5,
+    avatar: 'https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 4,
+    name: 'Ananya Patel',
+    position: 'Tech Startup Founder',
+    quote: 'Their AI solutions completely transformed our business operations. The team is innovative and responsive.',
+    rating: 5,
+    avatar: 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 5,
+    name: 'Vikram Singh',
+    position: 'E-commerce Director',
+    quote: 'The mobile app they built for us exceeded expectations. Our customers love the intuitive interface.',
+    rating: 4,
+    avatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+];
