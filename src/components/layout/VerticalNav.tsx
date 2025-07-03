@@ -34,7 +34,7 @@ const VerticalNav = () => {
   };
 
   return (
-    <nav className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center">
+    <nav className="hidden md:fixed md:right-6 md:top-1/2 md:-translate-y-1/2 md:z-50 md:flex md:flex-col md:items-center">
       {ZONES.map((zone, idx) => (
         <div key={zone.key} className="w-full flex flex-col items-center">
           <button

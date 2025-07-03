@@ -339,6 +339,21 @@ export default function Navbar() {
                                   item.label
                                 )}
                               </div>
+                            ) : section.title === 'Tech Community' ? (
+                              <div
+                                tabIndex={0}
+                                className="font-semibold text-base mb-1 text-gray-900 dark:text-white hover:text-red-500 focus:text-red-500 transition cursor-pointer px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 border-l-4 border-transparent hover:border-red-500 focus:border-red-500"
+                              >
+                                {item.label === 'Join Our Community' ? (
+                                  <Link to="/subscribe">{item.label}</Link>
+                                ) : item.label === 'Blog & Insights' ? (
+                                  <Link to="/blog">{item.label}</Link>
+                                ) : item.label === 'Contribute to Innovation' ? (
+                                  <Link to="/contact">{item.label}</Link>
+                                ) : (
+                                  item.label
+                                )}
+                              </div>
                             ) : (
                               <div
                                 tabIndex={0}
