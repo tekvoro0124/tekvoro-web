@@ -38,7 +38,7 @@ const GeneralPage = () => {
         bgImage="https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
       />
 
-      <section className="section">
+      <section className="section px-4">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl font-bold text-secondary-900 dark:text-white mb-6">
@@ -49,7 +49,7 @@ const GeneralPage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {contactReasons.map((reason, index) => (
               <motion.div
                 key={index}

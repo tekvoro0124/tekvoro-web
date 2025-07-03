@@ -206,7 +206,7 @@ export default function SeeOurSolutionsPage() {
       </section>
 
       {/* Enhanced Solutions Grid */}
-      <section id="solutions" className="py-24 bg-gradient-to-b from-black to-neutral-950 relative">
+      <section id="solutions" className="py-24 bg-gradient-to-b from-black to-neutral-950 relative px-4">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -286,7 +286,7 @@ export default function SeeOurSolutionsPage() {
       </section>
 
       {/* Enhanced Stats Section */}
-      <section className="py-24 bg-gradient-to-b from-neutral-950 to-black relative">
+      <section className="py-24 bg-gradient-to-b from-neutral-950 to-black relative px-4">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

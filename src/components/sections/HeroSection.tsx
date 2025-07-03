@@ -14,7 +14,7 @@ const ZONES: { key: ZoneKey; title: string; desc: string }[] = [
   { key: 'outdoor', title: 'Contact Zone', desc: 'Sustainability, remote dev culture' },
 ];
 
-const ZONE_HEIGHT = 700; // px per zone section
+const ZONE_HEIGHT = typeof window !== 'undefined' && window.innerWidth < 640 ? 420 : 700; // px per zone section, smaller for mobile
 
 function getZoneOverlay(zone: ZoneKey) {
   const arrow = (
@@ -30,29 +30,29 @@ function getZoneOverlay(zone: ZoneKey) {
   switch (zone) {
     case 'office':
       return (
-        <div className="max-w-xl">
-          <h1 className="text-3xl md:text-5xl font-light mb-4 tracking-tight leading-tight text-white drop-shadow-lg">
+        <div className="max-w-full sm:max-w-xl px-4 sm:px-0">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-light mb-4 tracking-tight leading-tight text-white drop-shadow-lg">
             Building the Future with AI & Innovation
           </h1>
-          <p className="text-base md:text-lg text-gray-200 mb-8 font-normal">
+          <p className="text-sm sm:text-base md:text-lg text-gray-200 mb-8 font-normal">
             Tekvoro delivers next-gen digital transformation, AI, and cloud solutions for global innovators.
           </p>
-          <div className="flex gap-4 mt-2">
-            <a href="/see-our-solutions" className="min-w-[220px] px-8 py-3 rounded-lg bg-white text-black font-bold shadow-lg hover:bg-red-500 hover:text-white transition text-lg flex items-center justify-center whitespace-nowrap">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-2 w-full">
+            <a href="/see-our-solutions" className="w-full sm:w-auto min-w-0 sm:min-w-[220px] px-6 sm:px-8 py-3 rounded-lg bg-white text-black font-bold shadow-lg hover:bg-red-500 hover:text-white transition text-base sm:text-lg flex items-center justify-center whitespace-nowrap">
               See Our Solutions {arrow}
             </a>
-            <a href="/book-demo" className="min-w-[220px] px-8 py-3 rounded-lg border border-white text-white font-bold hover:bg-white hover:text-black transition text-lg flex items-center justify-center whitespace-nowrap">
+            <a href="/book-demo" className="w-full sm:w-auto min-w-0 sm:min-w-[220px] px-6 sm:px-8 py-3 rounded-lg border border-white text-white font-bold hover:bg-white hover:text-black transition text-base sm:text-lg flex items-center justify-center whitespace-nowrap">
               Book a Demo {arrow}
             </a>
           </div>
-          <div className="flex gap-3 mt-8">
-            <span className="px-3 py-1 border border-white rounded text-xs text-white">AI</span>
-            <span className="px-3 py-1 border border-white rounded text-xs text-white">Cloud</span>
-            <span className="px-3 py-1 border border-white rounded text-xs text-white">IoT</span>
+          <div className="flex gap-2 sm:gap-3 mt-6 sm:mt-8">
+            <span className="px-2 sm:px-3 py-1 border border-white rounded text-xs text-white">AI</span>
+            <span className="px-2 sm:px-3 py-1 border border-white rounded text-xs text-white">Cloud</span>
+            <span className="px-2 sm:px-3 py-1 border border-white rounded text-xs text-white">IoT</span>
           </div>
           <Link
             to="/about/best-investors"
-            className="mt-8 inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500 text-black font-extrabold text-lg shadow-xl hover:scale-110 hover:from-pink-500 hover:to-yellow-400 transition-transform duration-300 animate-glow border-4 border-white/20"
+            className="mt-6 sm:mt-8 inline-flex items-center gap-2 px-5 sm:px-7 py-3 rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500 text-black font-extrabold text-base sm:text-lg shadow-xl hover:scale-110 hover:from-pink-500 hover:to-yellow-400 transition-transform duration-300 animate-glow border-4 border-white/20"
             style={{ letterSpacing: '0.04em' }}
           >
             <Award className="w-5 h-5 text-yellow-500 animate-bounce" />
@@ -62,18 +62,18 @@ function getZoneOverlay(zone: ZoneKey) {
       );
     case 'conference':
       return (
-        <div className="max-w-xl">
-          <h1 className="text-4xl md:text-5xl font-light mb-4 tracking-tight leading-tight text-white drop-shadow-lg">
+        <div className="max-w-full sm:max-w-xl px-4 sm:px-0">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-light mb-4 tracking-tight leading-tight text-white drop-shadow-lg">
             About Tekvoro
           </h1>
-          <p className="text-base md:text-lg text-gray-200 mb-8 font-normal">
+          <p className="text-sm sm:text-base md:text-lg text-gray-200 mb-8 font-normal">
             Discover our story, vision, and the passionate team driving digital transformation worldwide.
           </p>
-          <div className="flex gap-4 mt-2">
-            <a href="/read-insights" className="min-w-[200px] px-8 py-3 rounded-lg bg-white text-black font-bold shadow-lg hover:bg-red-500 hover:text-white transition text-lg flex items-center justify-center whitespace-nowrap">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-2 w-full">
+            <a href="/read-insights" className="w-full sm:w-auto min-w-0 sm:min-w-[200px] px-6 sm:px-8 py-3 rounded-lg bg-white text-black font-bold shadow-lg hover:bg-red-500 hover:text-white transition text-base sm:text-lg flex items-center justify-center whitespace-nowrap">
               Read Insights {arrow}
             </a>
-            <a href="/subscribe" className="min-w-[200px] px-8 py-3 rounded-lg border border-white text-white font-bold hover:bg-white hover:text-black transition text-lg flex items-center justify-center whitespace-nowrap">
+            <a href="/subscribe" className="w-full sm:w-auto min-w-0 sm:min-w-[200px] px-6 sm:px-8 py-3 rounded-lg border border-white text-white font-bold hover:bg-white hover:text-black transition text-base sm:text-lg flex items-center justify-center whitespace-nowrap">
               Subscribe {arrow}
             </a>
           </div>
@@ -81,18 +81,18 @@ function getZoneOverlay(zone: ZoneKey) {
       );
     case 'audience':
       return (
-        <div className="max-w-xl">
-          <h1 className="text-4xl md:text-5xl font-light mb-4 tracking-tight leading-tight text-white drop-shadow-lg">
+        <div className="max-w-full sm:max-w-xl px-4 sm:px-0">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-light mb-4 tracking-tight leading-tight text-white drop-shadow-lg">
             Our Projects & Impact
           </h1>
-          <p className="text-base md:text-lg text-gray-200 mb-8 font-normal">
+          <p className="text-sm sm:text-base md:text-lg text-gray-200 mb-8 font-normal">
             Explore our portfolio of innovative solutions and the success stories of our global clients.
           </p>
-          <div className="flex gap-4 mt-2">
-            <a href="/view-portfolio" className="min-w-[200px] px-8 py-3 rounded-lg bg-white text-black font-bold shadow-lg hover:bg-red-500 hover:text-white transition text-lg flex items-center justify-center whitespace-nowrap">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-2 w-full">
+            <a href="/view-portfolio" className="w-full sm:w-auto min-w-0 sm:min-w-[200px] px-6 sm:px-8 py-3 rounded-lg bg-white text-black font-bold shadow-lg hover:bg-red-500 hover:text-white transition text-base sm:text-lg flex items-center justify-center whitespace-nowrap">
               View Portfolio {arrow}
             </a>
-            <a href="/see-case-studies" className="min-w-[200px] px-8 py-3 rounded-lg border border-white text-white font-bold hover:bg-white hover:text-black transition text-lg flex items-center justify-center whitespace-nowrap">
+            <a href="/see-case-studies" className="w-full sm:w-auto min-w-0 sm:min-w-[200px] px-6 sm:px-8 py-3 rounded-lg border border-white text-white font-bold hover:bg-white hover:text-black transition text-base sm:text-lg flex items-center justify-center whitespace-nowrap">
               See Case Studies {arrow}
             </a>
           </div>
@@ -100,18 +100,18 @@ function getZoneOverlay(zone: ZoneKey) {
       );
     case 'data-room':
       return (
-        <div className="max-w-xl">
-          <h1 className="text-4xl md:text-5xl font-light mb-4 tracking-tight leading-tight text-white drop-shadow-lg">
+        <div className="max-w-full sm:max-w-xl px-4 sm:px-0">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-light mb-4 tracking-tight leading-tight text-white drop-shadow-lg">
             Insights & Blog
           </h1>
-          <p className="text-base md:text-lg text-gray-200 mb-8 font-normal">
+          <p className="text-sm sm:text-base md:text-lg text-gray-200 mb-8 font-normal">
             Stay ahead with our latest insights, technology trends, and industry best practices.
           </p>
-          <div className="flex gap-4 mt-2">
-            <a href="#blog" className="min-w-[200px] px-8 py-3 rounded-lg bg-white text-black font-bold shadow-lg hover:bg-red-500 hover:text-white transition text-lg flex items-center justify-center whitespace-nowrap">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-2 w-full">
+            <a href="#blog" className="w-full sm:w-auto min-w-0 sm:min-w-[200px] px-6 sm:px-8 py-3 rounded-lg bg-white text-black font-bold shadow-lg hover:bg-red-500 hover:text-white transition text-base sm:text-lg flex items-center justify-center whitespace-nowrap">
               Read Insights {arrow}
             </a>
-            <a href="#newsletter" className="min-w-[200px] px-8 py-3 rounded-lg border border-white text-white font-bold hover:bg-white hover:text-black transition text-lg flex items-center justify-center whitespace-nowrap">
+            <a href="#newsletter" className="w-full sm:w-auto min-w-0 sm:min-w-[200px] px-6 sm:px-8 py-3 rounded-lg border border-white text-white font-bold hover:bg-white hover:text-black transition text-base sm:text-lg flex items-center justify-center whitespace-nowrap">
               Subscribe {arrow}
             </a>
           </div>
@@ -119,10 +119,10 @@ function getZoneOverlay(zone: ZoneKey) {
       );
     case 'outdoor':
       return (
-        <div>
-          <div className="text-2xl font-bold mb-2">Sustainable & Remote</div>
-          <div className="text-base text-secondary mb-2">We build with sustainability in mind and support remote teams worldwide.</div>
-          <a href="/meet-the-team" className="mt-3 border-2 border-white text-white px-6 py-2 rounded-md font-bold text-xs uppercase tracking-widest hover:bg-white hover:text-black transition inline-block">Meet Our Team</a>
+        <div className="px-4 sm:px-0">
+          <div className="text-lg sm:text-2xl font-bold mb-2">Sustainable & Remote</div>
+          <div className="text-xs sm:text-base text-secondary mb-2">We build with sustainability in mind and support remote teams worldwide.</div>
+          <a href="/meet-the-team" className="mt-3 border-2 border-white text-white px-4 sm:px-6 py-2 rounded-md font-bold text-xs uppercase tracking-widest hover:bg-white hover:text-black transition inline-block">Meet Our Team</a>
         </div>
       );
     default:

@@ -43,7 +43,7 @@ export default function SupportPage() {
         </div>
       </section>
 
-      <section className="py-24 bg-gradient-to-b from-neutral-950 to-black">
+      <section className="section px-4">
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div

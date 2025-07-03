@@ -42,7 +42,7 @@ export default function BlogPage() {
   return (
     <>
       <Navbar />
-      <div className="relative overflow-hidden bg-black min-h-[40vh] flex flex-col items-center justify-center py-16">
+      <div className="relative overflow-hidden bg-black min-h-[40vh] flex flex-col items-center justify-center py-16 px-4">
         <motion.div className="absolute inset-0 z-0 pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
           <div className="w-full h-full bg-gradient-to-br from-black via-gray-900 to-gray-800 opacity-80" />
           <Sparkles className="absolute top-10 left-10 text-pink-400 opacity-30 animate-pulse" size={80} />
@@ -70,8 +70,8 @@ export default function BlogPage() {
           </motion.div>
         ))}
                   </div>
-      <div className="w-full max-w-4xl mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-8 mb-8">
           <div className="flex-1 flex items-center bg-white/10 rounded-full px-4 py-2 shadow-inner">
             <Search className="w-5 h-5 text-gray-400 mr-2" />
                   <input

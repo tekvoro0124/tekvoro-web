@@ -14,7 +14,7 @@ const AboutPage = () => {
         bgImage="https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
       />
 
-      <section className="section">
+      <section className="section px-4">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -65,7 +65,7 @@ const AboutPage = () => {
       </section>
 
       {/* CEO Bio Section */}
-      <section className="section bg-gray-50 dark:bg-gray-800">
+      <section className="section bg-gray-50 dark:bg-gray-800 px-4">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
@@ -109,7 +109,7 @@ const AboutPage = () => {
       </section>
 
       {/* Vision and Mission */}
-      <section className="section">
+      <section className="section px-4">
         <div className="container-custom">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-secondary-900 dark:text-white mb-4">
@@ -158,7 +158,7 @@ const AboutPage = () => {
       </section>
 
       {/* Company Timeline */}
-      <section className="section bg-gray-50 dark:bg-gray-800">
+      <section className="section bg-gray-50 dark:bg-gray-800 px-4">
         <div className="container-custom">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-secondary-900 dark:text-white mb-4">

@@ -40,28 +40,30 @@ const WebDevelopmentPage = () => (
         </p>
       </motion.div>
     </div>
-    <div className="flex flex-wrap justify-center gap-6 py-8 bg-gradient-to-r from-black via-gray-900 to-gray-800">
-      {stats.map((stat, i) => (
-        <motion.div key={stat.label} className="flex flex-col items-center bg-white/10 rounded-2xl px-6 py-4 min-w-[120px] shadow-lg backdrop-blur-md border border-white/20" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15, duration: 0.5 }} viewport={{ once: true }}>
-          <span className="mb-2">{stat.icon}</span>
-          <span className="text-2xl font-bold text-white drop-shadow-md">{stat.value}</span>
-          <span className="text-xs text-gray-300 mt-1">{stat.label}</span>
-        </motion.div>
-      ))}
-    </div>
-    <div className="py-12 bg-black/95">
-      <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 flex items-center gap-2">
-        <Sparkles className="text-pink-400 animate-pulse" /> Featured Services
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
-        {services.map((svc, i) => (
-          <motion.div key={svc.title} className="relative bg-gradient-to-br from-gray-900/80 to-black/80 rounded-2xl p-6 shadow-xl border border-white/10 hover:border-yellow-400/40 hover:scale-105 transition-transform duration-300 cursor-pointer group" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08, duration: 0.5 }} viewport={{ once: true }}>
-            <div className="flex items-center gap-3 mb-2">{svc.icon}<span className="text-lg font-bold text-white">{svc.title}</span></div>
-            <p className="text-gray-200 text-xs mb-1 text-center">{svc.desc}</p>
-          </motion.div>
-        ))}
+    <FullscreenSection>
+      <div className="w-full max-w-5xl mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          {/* ...content... */}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+          {stats.map((stat, i) => (
+            <motion.div key={stat.label} className="flex flex-col items-center bg-white/10 rounded-2xl px-6 py-4 min-w-[120px] shadow-lg backdrop-blur-md border border-white/20" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15, duration: 0.5 }} viewport={{ once: true }}>
+              <span className="mb-2">{stat.icon}</span>
+              <span className="text-2xl font-bold text-white drop-shadow-md">{stat.value}</span>
+              <span className="text-xs text-gray-300 mt-1">{stat.label}</span>
+            </motion.div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+          {services.map((svc, i) => (
+            <motion.div key={svc.title} className="relative bg-gradient-to-br from-gray-900/80 to-black/80 rounded-2xl p-6 shadow-xl border border-white/10 hover:border-yellow-400/40 hover:scale-105 transition-transform duration-300 cursor-pointer group" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08, duration: 0.5 }} viewport={{ once: true }}>
+              <div className="flex items-center gap-3 mb-2">{svc.icon}<span className="text-lg font-bold text-white">{svc.title}</span></div>
+              <p className="text-gray-200 text-xs mb-1 text-center">{svc.desc}</p>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </div>
+    </FullscreenSection>
     <div className="py-10 bg-gradient-to-r from-black via-gray-900 to-gray-800 flex flex-col items-center">
       <h2 className="text-xl md:text-2xl font-bold text-white mb-6 flex items-center gap-2">
         <Star className="text-yellow-400 animate-pulse" /> What Our Clients Say

@@ -69,7 +69,7 @@ const ThoughtLeadershipPage = () => {
         bgImage="https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
       />
 
-      <section className="section">
+      <section className="section px-4">
         <div className="container-custom">
           {/* Featured Article */}
           {featuredArticle && (

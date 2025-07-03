@@ -34,7 +34,7 @@ const LocationsPage = () => {
         bgImage="https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
       />
 
-      <section className="section">
+      <section className="section px-4">
         <div className="container-custom">
           <div className="space-y-16">
             {locations.map((location, index) => (
@@ -50,7 +50,7 @@ const LocationsPage = () => {
               >
                 <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
                   <div className="card overflow-hidden">
-                    <div className="h-80">
+                    <div className="h-64 sm:h-80 w-full">
                       <iframe 
                         src={location.mapUrl}
                         width="100%" 

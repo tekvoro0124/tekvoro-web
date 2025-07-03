@@ -8,7 +8,7 @@ export default function CulturePage() {
     <div className="bg-black min-h-screen flex flex-col">
       <Navbar />
       
-      <section className="relative w-full bg-gradient-to-br from-black via-neutral-900 to-black text-white overflow-hidden py-32">
+      <section className="relative w-full bg-gradient-to-br from-black via-neutral-900 to-black text-white overflow-hidden py-32 px-4">
         <div className="container-custom relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 50 }}

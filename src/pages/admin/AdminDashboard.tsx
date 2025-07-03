@@ -87,7 +87,7 @@ export default function AdminDashboard() {
   return (
     <div className="bg-black min-h-screen flex flex-col">
       <Navbar />
-      <section className="relative w-full bg-gradient-to-br from-black via-neutral-900 to-black text-white overflow-hidden py-24">
+      <section className="relative w-full bg-gradient-to-br from-black via-neutral-900 to-black text-white overflow-hidden py-24 px-4">
         <div className="container-custom relative z-10">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}

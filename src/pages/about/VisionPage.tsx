@@ -11,7 +11,7 @@ const VisionPage = () => {
         bgImage="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
       />
 
-      <section className="section">
+      <section className="section px-4">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-3xl font-bold text-secondary-900 dark:text-white mb-6">
