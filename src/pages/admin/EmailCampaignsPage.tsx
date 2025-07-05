@@ -1,198 +1,94 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Send, Users, BarChart3, Calendar, Mail, Target, TrendingUp } from 'lucide-react';
-import { supabase } from '../../utils/supabaseClient';
-import SEO from '../../components/SEO';
+import { 
+  PlusIcon, 
+  EnvelopeIcon, 
+  ChartBarIcon, 
+  ClockIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  EyeIcon,
+  PencilIcon,
+  TrashIcon
+} from '@heroicons/react/24/outline';
 
 interface Campaign {
   id: string;
   name: string;
-  template: string;
   subject: string;
-  status: 'draft' | 'scheduled' | 'sending' | 'sent' | 'cancelled';
+  template: string;
+  status: 'draft' | 'scheduled' | 'sending' | 'sent' | 'paused';
+  scheduledDate?: string;
+  sentDate?: string;
   recipients: number;
-  sent: number;
   opened: number;
   clicked: number;
-  scheduledAt?: string;
-  sentAt?: string;
+  unsubscribed: number;
+  openRate: number;
+  clickRate: number;
   createdAt: string;
+  updatedAt: string;
 }
 
 const EmailCampaignsPage: React.FC = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [templates, setTemplates] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
-  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-  // Form state
-  const [formData, setFormData] = useState({
-    name: '',
-    template: '',
-    subject: '',
-    recipients: '',
-    scheduledAt: '',
-    message: ''
-  });
-
+  // Mock data for demonstration
   useEffect(() => {
-    // Check authentication
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/admin/login');
-        return;
+    const mockCampaigns: Campaign[] = [
+      {
+        id: '1',
+        name: 'Welcome Series - New Subscribers',
+        subject: 'Welcome to Tekvoro Technologies!',
+        template: 'welcome',
+        status: 'sent',
+        sentDate: '2024-01-10T10:00:00Z',
+        recipients: 1250,
+        opened: 875,
+        clicked: 312,
+        unsubscribed: 8,
+        openRate: 70.0,
+        clickRate: 25.0,
+        createdAt: '2024-01-08T09:00:00Z',
+        updatedAt: '2024-01-10T10:00:00Z'
+      },
+      {
+        id: '2',
+        name: 'Q1 Newsletter - AI Trends',
+        subject: 'Latest AI Trends and Tekvoro Updates',
+        template: 'newsletter',
+        status: 'scheduled',
+        scheduledDate: '2024-01-15T14:00:00Z',
+        recipients: 2100,
+        opened: 0,
+        clicked: 0,
+        unsubscribed: 0,
+        openRate: 0,
+        clickRate: 0,
+        createdAt: '2024-01-12T11:00:00Z',
+        updatedAt: '2024-01-12T11:00:00Z'
+      },
+      {
+        id: '3',
+        name: 'Product Launch - Cloud Solutions',
+        subject: 'Introducing Our New Cloud Solutions Platform',
+        template: 'newsletter',
+        status: 'draft',
+        recipients: 0,
+        opened: 0,
+        clicked: 0,
+        unsubscribed: 0,
+        openRate: 0,
+        clickRate: 0,
+        createdAt: '2024-01-13T15:00:00Z',
+        updatedAt: '2024-01-13T15:00:00Z'
       }
-      setAuthenticated(true);
-      loadData();
-    };
-
-    checkAuth();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        navigate('/admin/login');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      
-      // Load templates
-      const templatesResponse = await fetch('/api/email-templates', {
-        headers: {
-          'Authorization': 'Bearer admin-token'
-        }
-      });
-      
-      if (templatesResponse.ok) {
-        const templatesData = await templatesResponse.json();
-        setTemplates(templatesData.templates?.map((t: any) => t.name) || []);
-      }
-
-      // Load campaigns (mock data for now)
-      const mockCampaigns: Campaign[] = [
-        {
-          id: '1',
-          name: 'Welcome Newsletter',
-          template: 'welcome',
-          subject: 'Welcome to Tekvoro! 🎉',
-          status: 'sent',
-          recipients: 150,
-          sent: 150,
-          opened: 89,
-          clicked: 45,
-          sentAt: '2024-01-15T10:00:00Z',
-          createdAt: '2024-01-15T09:00:00Z'
-        },
-        {
-          id: '2',
-          name: 'AI Solutions Update',
-          template: 'newsletter',
-          subject: 'Latest AI Innovations at Tekvoro',
-          status: 'scheduled',
-          recipients: 300,
-          sent: 0,
-          opened: 0,
-          clicked: 0,
-          scheduledAt: '2024-01-20T14:00:00Z',
-          createdAt: '2024-01-16T11:00:00Z'
-        },
-        {
-          id: '3',
-          name: 'Q1 Newsletter',
-          template: 'newsletter',
-          subject: 'Tekvoro Q1 2024 Newsletter',
-          status: 'draft',
-          recipients: 0,
-          sent: 0,
-          opened: 0,
-          clicked: 0,
-          createdAt: '2024-01-17T15:00:00Z'
-        }
-      ];
-      
-      setCampaigns(mockCampaigns);
-    } catch (error) {
-      console.error('Error loading data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreateCampaign = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    try {
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer admin-token'
-        },
-        body: JSON.stringify({
-          templateName: formData.template,
-          subject: formData.subject,
-          data: {
-            message: formData.message,
-            campaign_name: formData.name
-          },
-          scheduledAt: formData.scheduledAt || undefined
-        })
-      });
-
-      if (response.ok) {
-        setShowCreateForm(false);
-        setFormData({
-          name: '',
-          template: '',
-          subject: '',
-          recipients: '',
-          scheduledAt: '',
-          message: ''
-        });
-        await loadData();
-      }
-    } catch (error) {
-      console.error('Error creating campaign:', error);
-    }
-  };
-
-  const handleSendCampaign = async (campaignId: string) => {
-    try {
-      const campaign = campaigns.find(c => c.id === campaignId);
-      if (!campaign) return;
-
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer admin-token'
-        },
-        body: JSON.stringify({
-          templateName: campaign.template,
-          subject: campaign.subject,
-          data: {
-            campaign_name: campaign.name
-          }
-        })
-      });
-
-      if (response.ok) {
-        await loadData();
-      }
-    } catch (error) {
-      console.error('Error sending campaign:', error);
-    }
-  };
+    ];
+    setCampaigns(mockCampaigns);
+    setLoading(false);
+  }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -200,267 +96,401 @@ const EmailCampaignsPage: React.FC = () => {
       case 'scheduled': return 'bg-blue-100 text-blue-800';
       case 'sending': return 'bg-yellow-100 text-yellow-800';
       case 'sent': return 'bg-green-100 text-green-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
+      case 'paused': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'draft': return <Mail className="w-4 h-4" />;
-      case 'scheduled': return <Calendar className="w-4 h-4" />;
-      case 'sending': return <Send className="w-4 h-4" />;
-      case 'sent': return <TrendingUp className="w-4 h-4" />;
-      case 'cancelled': return <Target className="w-4 h-4" />;
-      default: return <Mail className="w-4 h-4" />;
+      case 'draft': return <PencilIcon className="w-4 h-4" />;
+      case 'scheduled': return <ClockIcon className="w-4 h-4" />;
+      case 'sending': return <EnvelopeIcon className="w-4 h-4" />;
+      case 'sent': return <CheckCircleIcon className="w-4 h-4" />;
+      case 'paused': return <XCircleIcon className="w-4 h-4" />;
+      default: return <PencilIcon className="w-4 h-4" />;
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const handleCreateCampaign = () => {
+    setShowCreateModal(true);
+  };
+
+  const handleViewCampaign = (campaign: Campaign) => {
+    setSelectedCampaign(campaign);
+  };
+
+  const handleEditCampaign = (campaign: Campaign) => {
+    // Navigate to campaign editor
+    console.log('Edit campaign:', campaign.id);
+  };
+
+  const handleDeleteCampaign = (campaignId: string) => {
+    if (confirm('Are you sure you want to delete this campaign?')) {
+      setCampaigns(campaigns.filter(c => c.id !== campaignId));
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
-  if (!authenticated) {
-    return null;
-  }
-
   return (
-    <>
-      <SEO
-        title="Email Campaigns - Admin Dashboard"
-        description="Send newsletters, announcements, and manage email campaigns"
-        noIndex={true}
-      />
-      <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => navigate('/admin')}
-                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <ArrowLeft className="w-5 h-5 text-gray-600" />
-                </button>
-                <div>
-                  <h1 className="text-xl font-semibold text-gray-900">Email Campaigns</h1>
-                  <p className="text-sm text-gray-500">Send newsletters and manage campaigns</p>
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Email Campaigns</h1>
+              <p className="mt-2 text-gray-600">
+                Create, manage, and track your email marketing campaigns
+              </p>
+            </div>
+            <button
+              onClick={handleCreateCampaign}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <PlusIcon className="w-5 h-5 mr-2" />
+              Create Campaign
+            </button>
+          </div>
+        </div>
+
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <EnvelopeIcon className="h-6 w-6 text-gray-400" />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Total Campaigns
+                    </dt>
+                    <dd className="text-lg font-medium text-gray-900">
+                      {campaigns.length}
+                    </dd>
+                  </dl>
                 </div>
               </div>
-              
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={() => setShowCreateForm(true)}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  New Campaign
-                </button>
+            </div>
+          </div>
+
+          <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <ChartBarIcon className="h-6 w-6 text-green-400" />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Avg Open Rate
+                    </dt>
+                    <dd className="text-lg font-medium text-gray-900">
+                      {campaigns.length > 0 
+                        ? (campaigns.reduce((sum, c) => sum + c.openRate, 0) / campaigns.length).toFixed(1)
+                        : '0'}%
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <CheckCircleIcon className="h-6 w-6 text-blue-400" />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Sent Today
+                    </dt>
+                    <dd className="text-lg font-medium text-gray-900">
+                      {campaigns.filter(c => 
+                        c.status === 'sent' && 
+                        new Date(c.sentDate || '').toDateString() === new Date().toDateString()
+                      ).length}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <ClockIcon className="h-6 w-6 text-yellow-400" />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Scheduled
+                    </dt>
+                    <dd className="text-lg font-medium text-gray-900">
+                      {campaigns.filter(c => c.status === 'scheduled').length}
+                    </dd>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {showCreateForm ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-6">Create New Campaign</h2>
-              
-              <form onSubmit={handleCreateCampaign} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Campaigns Table */}
+        <div className="bg-white shadow overflow-hidden sm:rounded-md">
+          <div className="px-4 py-5 sm:px-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              Campaign List
+            </h3>
+          </div>
+          <ul className="divide-y divide-gray-200">
+            {campaigns.map((campaign) => (
+              <li key={campaign.id} className="px-4 py-4 sm:px-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <EnvelopeIcon className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <div className="ml-4">
+                      <div className="flex items-center">
+                        <h4 className="text-lg font-medium text-gray-900">
+                          {campaign.name}
+                        </h4>
+                        <span className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(campaign.status)}`}>
+                          {getStatusIcon(campaign.status)}
+                          <span className="ml-1">{campaign.status}</span>
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-500">{campaign.subject}</p>
+                      <div className="mt-2 flex items-center text-sm text-gray-500">
+                        <span>Template: {campaign.template}</span>
+                        <span className="mx-2">•</span>
+                        <span>Recipients: {campaign.recipients.toLocaleString()}</span>
+                        {campaign.status === 'sent' && (
+                          <>
+                            <span className="mx-2">•</span>
+                            <span>Opens: {campaign.opened.toLocaleString()} ({campaign.openRate}%)</span>
+                            <span className="mx-2">•</span>
+                            <span>Clicks: {campaign.clicked.toLocaleString()} ({campaign.clickRate}%)</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => handleViewCampaign(campaign)}
+                      className="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      <EyeIcon className="w-4 h-4 mr-1" />
+                      View
+                    </button>
+                    <button
+                      onClick={() => handleEditCampaign(campaign)}
+                      className="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      <PencilIcon className="w-4 h-4 mr-1" />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCampaign(campaign.id)}
+                      className="inline-flex items-center px-3 py-1 border border-red-300 shadow-sm text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    >
+                      <TrashIcon className="w-4 h-4 mr-1" />
+                      Delete
+                    </button>
+                  </div>
+                </div>
+                <div className="mt-2 text-sm text-gray-500">
+                  Created: {formatDate(campaign.createdAt)}
+                  {campaign.scheduledDate && (
+                    <>
+                      <span className="mx-2">•</span>
+                      Scheduled: {formatDate(campaign.scheduledDate)}
+                    </>
+                  )}
+                  {campaign.sentDate && (
+                    <>
+                      <span className="mx-2">•</span>
+                      Sent: {formatDate(campaign.sentDate)}
+                    </>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Create Campaign Modal */}
+        {showCreateModal && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+              <div className="mt-3">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">
+                  Create New Campaign
+                </h3>
+                <form className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700">
                       Campaign Name
                     </label>
                     <input
                       type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter campaign name"
                     />
                   </div>
-                  
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Template
-                    </label>
-                    <select
-                      value={formData.template}
-                      onChange={(e) => setFormData({ ...formData, template: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    >
-                      <option value="">Select a template</option>
-                      {templates.map((template) => (
-                        <option key={template} value={template}>{template}</option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700">
                       Subject Line
                     </label>
                     <input
                       type="text"
-                      value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter email subject"
                     />
                   </div>
-                  
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Recipients
+                    <label className="block text-sm font-medium text-gray-700">
+                      Template
                     </label>
-                    <input
-                      type="number"
-                      value={formData.recipients}
-                      onChange={(e) => setFormData({ ...formData, recipients: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Number of recipients"
-                    />
+                    <select className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                      <option value="">Select a template</option>
+                      <option value="welcome">Welcome Email</option>
+                      <option value="newsletter">Newsletter</option>
+                      <option value="demo-booking">Demo Booking</option>
+                      <option value="contact-form">Contact Form</option>
+                    </select>
                   </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Schedule (Optional)
-                    </label>
-                    <input
-                      type="datetime-local"
-                      value={formData.scheduledAt}
-                      onChange={(e) => setFormData({ ...formData, scheduledAt: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Custom Message
-                  </label>
-                  <textarea
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Add a custom message to your campaign..."
-                  />
-                </div>
-                
-                <div className="flex items-center justify-end space-x-3">
-                  <button
-                    type="button"
-                    onClick={() => setShowCreateForm(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Create Campaign
-                  </button>
-                </div>
-              </form>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {/* Campaigns List */}
-              <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-200">
-                  <h2 className="text-lg font-medium text-gray-900">Campaigns</h2>
-                </div>
-                
-                <div className="divide-y divide-gray-200">
-                  {campaigns.map((campaign) => (
-                    <div key={campaign.id} className="px-6 py-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className={`p-2 rounded-lg ${getStatusColor(campaign.status)}`}>
-                            {getStatusIcon(campaign.status)}
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-medium text-gray-900">{campaign.name}</h3>
-                            <p className="text-sm text-gray-500">{campaign.subject}</p>
-                            <div className="flex items-center space-x-4 mt-1">
-                              <span className="text-xs text-gray-400">
-                                Template: {campaign.template}
-                              </span>
-                              <span className="text-xs text-gray-400">
-                                Created: {new Date(campaign.createdAt).toLocaleDateString()}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center space-x-4">
-                          <div className="text-right">
-                            <div className="text-sm font-medium text-gray-900">
-                              {campaign.sent}/{campaign.recipients} sent
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {campaign.opened} opened • {campaign.clicked} clicked
-                            </div>
-                          </div>
-                          
-                          {campaign.status === 'draft' && (
-                            <button
-                              onClick={() => handleSendCampaign(campaign.id)}
-                              className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            >
-                              <Send className="w-4 h-4 mr-2" />
-                              Send
-                            </button>
-                          )}
-                          
-                          {campaign.status === 'sent' && (
-                            <button
-                              onClick={() => setSelectedCampaign(campaign)}
-                              className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            >
-                              <BarChart3 className="w-4 h-4 mr-2" />
-                              Analytics
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Empty State */}
-              {campaigns.length === 0 && (
-                <div className="text-center py-12">
-                  <Mail className="mx-auto h-12 w-12 text-gray-400" />
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">No campaigns</h3>
-                  <p className="mt-1 text-sm text-gray-500">Get started by creating a new email campaign.</p>
-                  <div className="mt-6">
+                  <div className="flex justify-end space-x-3">
                     <button
-                      onClick={() => setShowCreateForm(true)}
-                      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      type="button"
+                      onClick={() => setShowCreateModal(false)}
+                      className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                     >
-                      <Plus className="w-4 h-4 mr-2" />
-                      New Campaign
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                    >
+                      Create Campaign
                     </button>
                   </div>
-                </div>
-              )}
+                </form>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {/* Campaign Details Modal */}
+        {selectedCampaign && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div className="relative top-20 mx-auto p-5 border w-3/4 max-w-4xl shadow-lg rounded-md bg-white">
+              <div className="mt-3">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    Campaign Details: {selectedCampaign.name}
+                  </h3>
+                  <button
+                    onClick={() => setSelectedCampaign(null)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <XCircleIcon className="w-6 h-6" />
+                  </button>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-3">Campaign Information</h4>
+                    <dl className="space-y-2">
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Subject</dt>
+                        <dd className="text-sm text-gray-900">{selectedCampaign.subject}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Template</dt>
+                        <dd className="text-sm text-gray-900">{selectedCampaign.template}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Status</dt>
+                        <dd className="text-sm text-gray-900">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(selectedCampaign.status)}`}>
+                            {getStatusIcon(selectedCampaign.status)}
+                            <span className="ml-1">{selectedCampaign.status}</span>
+                          </span>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Created</dt>
+                        <dd className="text-sm text-gray-900">{formatDate(selectedCampaign.createdAt)}</dd>
+                      </div>
+                      {selectedCampaign.scheduledDate && (
+                        <div>
+                          <dt className="text-sm font-medium text-gray-500">Scheduled</dt>
+                          <dd className="text-sm text-gray-900">{formatDate(selectedCampaign.scheduledDate)}</dd>
+                        </div>
+                      )}
+                      {selectedCampaign.sentDate && (
+                        <div>
+                          <dt className="text-sm font-medium text-gray-500">Sent</dt>
+                          <dd className="text-sm text-gray-900">{formatDate(selectedCampaign.sentDate)}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-3">Performance Metrics</h4>
+                    <dl className="space-y-2">
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Recipients</dt>
+                        <dd className="text-sm text-gray-900">{selectedCampaign.recipients.toLocaleString()}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Opened</dt>
+                        <dd className="text-sm text-gray-900">{selectedCampaign.opened.toLocaleString()} ({selectedCampaign.openRate}%)</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Clicked</dt>
+                        <dd className="text-sm text-gray-900">{selectedCampaign.clicked.toLocaleString()} ({selectedCampaign.clickRate}%)</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Unsubscribed</dt>
+                        <dd className="text-sm text-gray-900">{selectedCampaign.unsubscribed.toLocaleString()}</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 
