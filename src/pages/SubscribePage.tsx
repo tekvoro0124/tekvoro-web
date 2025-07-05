@@ -125,6 +125,9 @@ export default function SubscribePage() {
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [interests, setInterests] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitMessage, setSubmitMessage] = useState('');
 
   const interestOptions = [
     'Artificial Intelligence',
@@ -145,10 +148,50 @@ export default function SubscribePage() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle subscription logic here
-    console.log('Subscription submitted:', { email, name, company, interests, selectedPlan });
+    
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setSubmitMessage('');
+
+    try {
+      const response = await fetch('/.netlify/functions/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          name,
+          company,
+          interests,
+          selectedPlan
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        setSubmitMessage(result.message);
+        // Reset form
+        setEmail('');
+        setName('');
+        setCompany('');
+        setInterests([]);
+        setSelectedPlan('pro');
+      } else {
+        setSubmitStatus('error');
+        setSubmitMessage(result.error || 'Subscription failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      setSubmitStatus('error');
+      setSubmitMessage('Subscription failed. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -479,16 +522,45 @@ export default function SubscribePage() {
                 </div>
               </div>
 
+              {/* Status Messages */}
+              {submitStatus === 'success' && (
+                <div className="p-4 rounded-xl bg-green-500/20 border border-green-400/30 text-green-400">
+                  <p className="font-semibold">Success!</p>
+                  <p>{submitMessage}</p>
+                </div>
+              )}
+              
+              {submitStatus === 'error' && (
+                <div className="p-4 rounded-xl bg-red-500/20 border border-red-400/30 text-red-400">
+                  <p className="font-semibold">Error</p>
+                  <p>{submitMessage}</p>
+                </div>
+              )}
+
               {/* Submit Button */}
               <motion.button
                 type="submit"
-                className="w-full group px-8 py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-bold text-lg shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                disabled={isSubmitting}
+                className={`w-full group px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl transition-all duration-300 ${
+                  isSubmitting 
+                    ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:shadow-yellow-500/25'
+                }`}
+                whileHover={!isSubmitting ? { scale: 1.02 } : {}}
+                whileTap={!isSubmitting ? { scale: 0.98 } : {}}
               >
                 <span className="flex items-center justify-center gap-2">
-                  <Send className="w-5 h-5" />
-                  Subscribe to Insights
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                      Subscribing...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      Subscribe to Insights
+                    </>
+                  )}
                 </span>
               </motion.button>
             </form>
