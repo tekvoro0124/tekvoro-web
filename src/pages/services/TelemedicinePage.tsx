@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { Video, PhoneCall, UserCheck, HeartPulse, Globe2 } from 'lucide-react';
 
 const features = [
@@ -47,7 +48,25 @@ const testimonials = [
 
 const TelemedicinePage = () => {
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Telemedicine Solutions | Tekvoro Technologies"
+        description="Revolutionize healthcare delivery with secure, scalable telemedicine platforms. Connect patients with healthcare providers through advanced video conferencing and remote monitoring."
+        keywords="telemedicine, telehealth, remote healthcare, video consultations, healthcare technology, medical software, patient care, digital health"
+        ogImage="/images/telemedicine-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Telemedicine Solutions",
+          "description": "Revolutionize healthcare delivery with secure, scalable telemedicine platforms",
+          "provider": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          },
+          "serviceType": "Telemedicine Platform Development"
+        }}
+      />
       <Navbar />
       {/* Immersive Hero Section */}
       <section className="relative w-full bg-gradient-to-br from-black via-gray-900 to-neutral-900 text-white overflow-hidden py-24">

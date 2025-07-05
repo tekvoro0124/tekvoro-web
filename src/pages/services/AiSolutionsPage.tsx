@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { Sparkles, Layers, UserCheck, Globe2, Rocket, Star, TrendingUp, Users, ArrowRight } from 'lucide-react';
 
 const features = [
@@ -67,6 +68,51 @@ const solutions = [
 const AiSolutionsPage = () => {
   return (
     <>
+      <SEO
+        title="AI Solutions & Artificial Intelligence Services"
+        description="Transform your business with Tekvoro's cutting-edge AI solutions. Custom AI development, machine learning, predictive analytics, and intelligent automation for enterprises."
+        keywords="AI solutions, artificial intelligence, machine learning, predictive analytics, natural language processing, computer vision, AI automation, custom AI development, enterprise AI"
+        canonical="https://www.tekvoro.com/services/ai-solutions"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "AI Solutions",
+          "description": "Custom AI development and artificial intelligence solutions for enterprises",
+          "provider": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies"
+          },
+          "serviceType": "Artificial Intelligence Solutions",
+          "areaServed": "Worldwide",
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "AI Services",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Custom AI Development"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Predictive Analytics"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Natural Language Processing"
+                }
+              }
+            ]
+          }
+        }}
+      />
       <Navbar />
       <div className="relative overflow-hidden bg-black min-h-[40vh] flex flex-col items-center justify-center py-16">
         <motion.div className="absolute inset-0 z-0 pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>

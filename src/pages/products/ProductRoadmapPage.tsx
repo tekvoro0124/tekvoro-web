@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { Flag, CheckCircle, Clock, Lightbulb, ChevronDown, ChevronUp, Tag, PlusCircle } from 'lucide-react';
 
 const years = ['All', '2024', '2025'];
@@ -157,7 +158,24 @@ const ProductRoadmapPage = () => {
   }
 
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Product Roadmap | Tekvoro Technologies"
+        description="Explore our product roadmap and see what's coming next. Discover upcoming features, improvements, and innovations that will enhance your experience with our solutions."
+        keywords="product roadmap, upcoming features, product development, technology roadmap, feature planning, product updates, innovation timeline"
+        ogImage="/images/product-roadmap-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Product Roadmap",
+          "description": "Explore our product roadmap and see what's coming next",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
       {/* Hero Section */}
       <section className="relative w-full bg-gradient-to-br from-black via-blue-900 to-neutral-900 text-white overflow-hidden py-20 md:py-28">

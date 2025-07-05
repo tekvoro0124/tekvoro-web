@@ -1,5 +1,6 @@
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Star, TrendingUp, Users, ArrowRight, BookOpen, Search, Tag, UserCircle, X, Linkedin, Twitter } from 'lucide-react';
 import { useState } from 'react';
@@ -25,7 +26,7 @@ const posts = [
 
 const POSTS_PER_PAGE = 6;
 
-export default function BlogPage() {
+const BlogPage = () => {
   const [search, setSearch] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [page, setPage] = useState(1);
@@ -41,6 +42,23 @@ export default function BlogPage() {
 
   return (
     <>
+      <SEO
+        title="Blog & Insights - Tekvoro Technologies"
+        description="Stay updated with the latest insights on AI, cloud computing, digital transformation, and technology trends. Expert analysis and thought leadership from Tekvoro Technologies."
+        keywords="AI blog, technology insights, digital transformation blog, cloud computing articles, tech trends, AI news, innovation blog, technology consulting insights"
+        canonical="https://www.tekvoro.com/blog"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Blog",
+          "name": "Tekvoro Technologies Blog",
+          "description": "Insights and analysis on AI, cloud computing, and digital transformation",
+          "url": "https://www.tekvoro.com/blog",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies"
+          }
+        }}
+      />
       <Navbar />
       <div className="relative overflow-hidden bg-black min-h-[40vh] flex flex-col items-center justify-center py-16 px-4">
         <motion.div className="absolute inset-0 z-0 pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
@@ -251,3 +269,5 @@ export default function BlogPage() {
     </>
   );
 }
+
+export default BlogPage;

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { Cloud, Server, Shield, Database, TrendingUp, Sparkles, Star, Users, ArrowRight } from 'lucide-react';
 
 const features = [
@@ -46,6 +47,24 @@ const solutions = [
 const CloudSolutionsPage = () => {
   return (
     <>
+      <SEO
+        title="Cloud Computing Solutions & Services"
+        description="Transform your business with Tekvoro's cloud computing solutions. AWS, Azure, Google Cloud expertise. Scalable, secure, and cost-effective cloud infrastructure and migration services."
+        keywords="cloud computing, AWS, Azure, Google Cloud, cloud migration, cloud infrastructure, cloud consulting, hybrid cloud, multi-cloud, cloud security"
+        canonical="https://www.tekvoro.com/services/cloud-solutions"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Cloud Computing Solutions",
+          "description": "Comprehensive cloud computing and migration services",
+          "provider": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies"
+          },
+          "serviceType": "Cloud Computing",
+          "areaServed": "Worldwide"
+        }}
+      />
       <Navbar />
       <div className="relative overflow-hidden bg-black min-h-[40vh] flex flex-col items-center justify-center py-16">
         <motion.div className="absolute inset-0 z-0 pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>

@@ -3,6 +3,7 @@ import Footer from '../../components/layout/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Award, Star, Users, TrendingUp, ArrowRight, Globe, Sparkles, X, Linkedin, Twitter, Link as LinkIcon } from 'lucide-react';
 import { useState } from 'react';
+import SEO from '../../components/SEO';
 
 type Investor = {
   name: string;
@@ -163,11 +164,28 @@ const stats = [
 
 const featured = investors.filter(i => i.featured);
 
-export default function BestInvestorsPage() {
+const BestInvestorsPage = () => {
   const [modalInvestor, setModalInvestor] = useState<Investor | null>(null);
   const [carouselIdx, setCarouselIdx] = useState(0);
   return (
     <div className="bg-black min-h-screen flex flex-col">
+      <SEO 
+        title="Best Investors | Tekvoro Technologies"
+        description="Meet our distinguished investors and partners who believe in our vision. Learn about the strategic partnerships and investments that fuel our growth and innovation."
+        keywords="investors, partners, strategic partnerships, investment, funding, business partners, financial backing"
+        ogImage="/images/best-investors-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Best Investors",
+          "description": "Meet our distinguished investors and partners who believe in our vision",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
       {/* AI 2025 Hero */}
       <section className="relative w-full bg-gradient-to-br from-black via-neutral-900 to-black text-white overflow-hidden py-32 flex flex-col items-center justify-center">
@@ -419,4 +437,6 @@ export default function BestInvestorsPage() {
       <Footer />
     </div>
   );
-} 
+}
+
+export default BestInvestorsPage; 

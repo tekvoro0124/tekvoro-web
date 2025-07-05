@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { Share2, Tag } from 'lucide-react';
 
 const categories = [
@@ -90,7 +91,24 @@ const WhatsNewPage = () => {
   const rest = filteredNews.filter((n) => n.id !== featured.id);
 
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="What's New | Tekvoro Technologies"
+        description="Stay updated with the latest features, improvements, and innovations from Tekvoro Technologies. Discover what's new in our products and services."
+        keywords="what's new, latest features, product updates, new releases, technology updates, feature announcements, product improvements"
+        ogImage="/images/whats-new-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "What's New",
+          "description": "Stay updated with the latest features and innovations from Tekvoro Technologies",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
       {/* Featured News Hero */}
       <section className="relative w-full bg-gradient-to-br from-black via-gray-900 to-neutral-900 text-white overflow-hidden py-20 md:py-28">

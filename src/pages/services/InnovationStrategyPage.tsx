@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
+import { Sparkles, Layers, UserCheck, Globe2, Rocket, Star, TrendingUp, Users, ArrowRight } from 'lucide-react';
 
 const features = [
   {
@@ -51,6 +53,24 @@ const futures = [
 const InnovationStrategyPage = () => {
   return (
     <div className="bg-black min-h-screen flex flex-col">
+      <SEO 
+        title="Innovation Strategy Services | Tekvoro Technologies"
+        description="Transform your business with cutting-edge innovation strategies. We help organizations drive growth, competitive advantage, and digital transformation through strategic innovation consulting."
+        keywords="innovation strategy, digital transformation, business innovation, strategic consulting, technology innovation, competitive advantage, growth strategy"
+        ogImage="/images/innovation-strategy-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Innovation Strategy Services",
+          "description": "Transform your business with cutting-edge innovation strategies that drive growth and competitive advantage",
+          "provider": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          },
+          "serviceType": "Innovation Strategy Consulting"
+        }}
+      />
       <Navbar />
       {/* Futuristic Hero Banner */}
       <section className="relative flex flex-col justify-center items-center min-h-[60vh] bg-gradient-to-br from-black via-gray-900 to-neutral-900 text-white overflow-hidden">

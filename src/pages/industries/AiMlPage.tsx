@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import PageHeader from '../../components/layout/PageHeader';
 import Footer from '../../components/layout/Footer';
 import Navbar from '../../components/layout/Navbar';
+import SEO from '../../components/SEO';
 import { Sparkles, Star, TrendingUp, Users, ArrowRight, BrainCircuit } from 'lucide-react';
 
 const stats = [
@@ -19,7 +20,25 @@ const useCases = [
 
 const AiMlPage = () => {
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="AI/ML Industry Solutions | Tekvoro Technologies"
+        description="Transform your business with cutting-edge AI and machine learning solutions. We help organizations leverage artificial intelligence to automate processes, gain insights, and drive innovation."
+        keywords="AI solutions, machine learning, artificial intelligence, ML solutions, AI consulting, machine learning consulting, AI implementation"
+        ogImage="/images/ai-ml-industry-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "AI/ML Industry Solutions",
+          "description": "Transform your business with cutting-edge AI and machine learning solutions",
+          "provider": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          },
+          "serviceType": "AI/ML Consulting"
+        }}
+      />
       <Navbar />
       <div className="relative overflow-hidden bg-black min-h-[40vh] flex flex-col items-center justify-center py-16">
         <motion.div className="absolute inset-0 z-0 pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
@@ -86,7 +105,7 @@ const AiMlPage = () => {
         </motion.a>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

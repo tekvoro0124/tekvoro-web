@@ -1,7 +1,8 @@
+import { motion } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, MapPin, Clock, DollarSign, Users } from 'lucide-react';
+import SEO from '../components/SEO';
+import { Sparkles, ArrowRight, MapPin, Clock, DollarSign, Users, Calendar, Star, Award, CheckCircle } from 'lucide-react';
 
 const positions = [
   {
@@ -22,9 +23,34 @@ const positions = [
   }
 ];
 
-export default function CareersPage() {
+const CareersPage = () => {
   return (
     <div className="bg-black min-h-screen flex flex-col">
+      <SEO
+        title="Careers at Tekvoro Technologies - Join Our Team"
+        description="Join Tekvoro Technologies and be part of a team that's shaping the future of AI and digital transformation. Explore career opportunities in technology, innovation, and growth."
+        keywords="careers, jobs, employment, AI jobs, technology careers, software development jobs, Hyderabad tech jobs, digital transformation careers"
+        ogImage="/images/careers-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "JobPosting",
+          "title": "Careers at Tekvoro Technologies",
+          "description": "Join our team of innovators and technology experts",
+          "hiringOrganization": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          },
+          "jobLocation": {
+            "@type": "Place",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Hyderabad",
+              "addressCountry": "India"
+            }
+          }
+        }}
+      />
       <Navbar />
       
       <section className="relative w-full bg-gradient-to-br from-black via-neutral-900 to-black text-white overflow-hidden py-32">
@@ -136,4 +162,6 @@ export default function CareersPage() {
       <Footer />
     </div>
   );
-}
+};
+
+export default CareersPage;

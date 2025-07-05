@@ -146,11 +146,10 @@ const Footer = () => {
                   >
                     <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-300" />
                     {link.label}
+                    {link.label.includes('Admin') && (
+                      <span className="block text-xs text-yellow-300 mt-1 ml-6 bg-white/5 px-2 py-1 rounded-md border border-yellow-400/20 w-fit">Demo: admin@tekvoro.com / password: demo123</span>
+                    )}
                   </Link>
-                  {/* Add demo credentials below Admin Login */}
-                  {link.label.includes('Admin') && (
-                    <span className="block text-xs text-yellow-300 mt-1 ml-6 bg-white/5 px-2 py-1 rounded-md border border-yellow-400/20 w-fit">Demo: admin@tekvoro.com / password: demo123</span>
-                  )}
                 </motion.li>
               ))}
             </ul>
@@ -204,9 +203,14 @@ const Footer = () => {
             </h3>
             <ul className="space-y-4">
               {[
-                { to: '/blog', label: 'Blog' },
+                { to: '/blog', label: 'Blog & Insights' },
                 { to: '/insights/case-studies', label: 'Case Studies' },
+                { to: '/insights/whitepapers', label: 'Whitepapers' },
                 { to: '/insights/events', label: 'Events' },
+                { to: '/client-portal', label: 'Client Portal' },
+                { to: '/support-center', label: 'Support Center' },
+                { to: '/subscribe', label: 'Newsletter' },
+                { to: '/marketing', label: 'Marketing Campaigns', internal: true },
               ].map((link, idx) => (
                 <motion.li
                   key={link.label}
@@ -218,7 +222,15 @@ const Footer = () => {
                   className="flex items-center gap-2 group"
                 >
                   <ArrowRight className="w-3 h-3 text-green-400 opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                  <Link to={link.to} className="text-gray-300 hover:text-green-400 transition-all duration-300 flex items-center gap-2">{link.label}</Link>
+                  <Link 
+                    to={link.to} 
+                    className={`text-gray-300 hover:text-green-400 transition-all duration-300 flex items-center gap-2`}
+                  >
+                    {link.label}
+                    {(link as any).internal && (
+                      <span className="text-xs bg-blue-500 text-white px-2 py-0.5 rounded-full">Internal</span>
+                    )}
+                  </Link>
                 </motion.li>
               ))}
             </ul>

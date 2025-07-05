@@ -1,5 +1,6 @@
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Sparkles, ArrowRight, ExternalLink, Search, Clock, Eye, Heart, Share2, BookOpen, Lightbulb } from 'lucide-react';
@@ -46,7 +47,7 @@ const stats = [
   { number: '24/7', label: 'Fresh Content', icon: <Clock className="w-6 h-6" /> }
 ];
 
-export default function ReadInsightsPage() {
+const ReadInsightsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -57,7 +58,24 @@ export default function ReadInsightsPage() {
   });
 
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Read Insights | Tekvoro Technologies"
+        description="Explore our comprehensive collection of insights, articles, and thought leadership content. Stay informed about technology trends, industry developments, and strategic perspectives."
+        keywords="insights, articles, thought leadership, technology insights, industry insights, business insights, knowledge base"
+        ogImage="/images/read-insights-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Read Insights",
+          "description": "Explore our comprehensive collection of insights and articles",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
       
       {/* Hero Section */}
@@ -388,3 +406,5 @@ export default function ReadInsightsPage() {
     </div>
   );
 }
+
+export default ReadInsightsPage;

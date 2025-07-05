@@ -1,5 +1,6 @@
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, Linkedin, Mail, Users, Award, Star } from 'lucide-react';
 
@@ -22,9 +23,26 @@ const leaders = [
   }
 ];
 
-export default function LeadershipPage() {
+const LeadershipPage = () => {
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Leadership | Tekvoro Technologies"
+        description="Meet our leadership team of experienced professionals driving innovation and growth. Learn about our executives and their vision for the future of technology."
+        keywords="leadership, executives, management team, company leadership, executive profiles, leadership bios, management"
+        ogImage="/images/leadership-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Leadership",
+          "description": "Meet our leadership team of experienced professionals driving innovation",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
       
       <section className="relative w-full bg-gradient-to-br from-black via-neutral-900 to-black text-white overflow-hidden py-32 px-4">
@@ -106,3 +124,5 @@ export default function LeadershipPage() {
     </div>
   );
 }
+
+export default LeadershipPage;

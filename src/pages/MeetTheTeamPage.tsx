@@ -1,5 +1,6 @@
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { 
@@ -109,7 +110,7 @@ const stats = [
   { number: '100+', label: 'AI Projects', icon: <Target className="w-6 h-6" /> }
 ];
 
-export default function MeetTheTeamPage() {
+const MeetTheTeamPage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState('All');
   const [selectedMember, setSelectedMember] = useState(null);
 
@@ -118,7 +119,24 @@ export default function MeetTheTeamPage() {
     : teamMembers.filter(member => member.department === selectedDepartment);
 
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Meet The Team | Tekvoro Technologies"
+        description="Meet our talented team of professionals who are passionate about technology and innovation. Learn about our experts and their expertise in delivering exceptional solutions."
+        keywords="meet the team, our team, team members, professionals, experts, staff, team profiles"
+        ogImage="/images/meet-the-team-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Meet The Team",
+          "description": "Meet our talented team of professionals passionate about technology",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
       
       {/* Hero Section */}
@@ -481,4 +499,6 @@ export default function MeetTheTeamPage() {
       <Footer />
     </div>
   );
-} 
+}
+
+export default MeetTheTeamPage; 

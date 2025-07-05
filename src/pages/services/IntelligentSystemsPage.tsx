@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { Cpu, Bot, ShieldCheck, CloudLightning, Settings2 } from 'lucide-react';
 
 const features = [
@@ -72,7 +73,25 @@ const IntelligentSystemsPage = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Intelligent Systems Solutions | Tekvoro Technologies"
+        description="Build intelligent systems that learn, adapt, and optimize. Our AI-powered solutions automate processes, enhance decision-making, and drive operational excellence."
+        keywords="intelligent systems, AI automation, machine learning, smart systems, process automation, decision intelligence, operational excellence"
+        ogImage="/images/intelligent-systems-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Intelligent Systems Solutions",
+          "description": "Build intelligent systems that learn, adapt, and optimize with AI-powered automation",
+          "provider": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          },
+          "serviceType": "Intelligent Systems Development"
+        }}
+      />
       <Navbar />
       {/* Split Hero Section with Animation */}
       <section className="relative w-full bg-gradient-to-br from-black via-gray-900 to-neutral-900 text-white overflow-hidden py-20">

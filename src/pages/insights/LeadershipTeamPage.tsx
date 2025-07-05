@@ -1,5 +1,6 @@
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Linkedin, Twitter, Mail, Phone } from 'lucide-react';
@@ -150,7 +151,64 @@ const TEAM_DATA: TeamData = {
 
 const TABS = Object.keys(TEAM_DATA);
 
-export default function LeadershipTeamPage() {
+const leaders = [
+  {
+    name: 'Michael Rodriguez',
+    title: 'Chief Executive Officer',
+    bio: 'Visionary leader with 20+ years in tech, driving innovation and growth at Tekvoro.',
+    image: 'https://randomuser.me/api/portraits/men/32.jpg',
+    linkedin: '#',
+    twitter: '#',
+    email: 'michael@tekvoro.com',
+  },
+  {
+    name: 'Dr. Sarah Chen',
+    title: 'Chief Technology Officer',
+    bio: "Expert in AI and cloud, leading the company's technology strategy and R&D.",
+    image: 'https://randomuser.me/api/portraits/women/44.jpg',
+    linkedin: '#',
+    twitter: '#',
+    email: 'sarah@tekvoro.com',
+  },
+  {
+    name: 'Lisa Park',
+    title: 'Chief Innovation Officer',
+    bio: 'Champion of sustainable innovation and digital transformation.',
+    image: 'https://randomuser.me/api/portraits/women/68.jpg',
+    linkedin: '#',
+    twitter: '#',
+    email: 'lisa@tekvoro.com',
+  },
+  {
+    name: 'Dr. Emily Watson',
+    title: 'Chief Ethics Officer',
+    bio: 'Advocate for responsible AI and digital ethics in technology.',
+    image: 'https://randomuser.me/api/portraits/women/65.jpg',
+    linkedin: '#',
+    twitter: '#',
+    email: 'emily@tekvoro.com',
+  },
+  {
+    name: 'James Thompson',
+    title: 'Chief People Officer',
+    bio: 'Building a culture of excellence and growth for all employees.',
+    image: 'https://randomuser.me/api/portraits/men/43.jpg',
+    linkedin: '#',
+    twitter: '#',
+    email: 'james@tekvoro.com',
+  },
+  {
+    name: 'Dr. David Kim',
+    title: 'Chief Research Officer',
+    bio: 'Pushing the boundaries of research in quantum computing and emerging tech.',
+    image: 'https://randomuser.me/api/portraits/men/56.jpg',
+    linkedin: '#',
+    twitter: '#',
+    email: 'david@tekvoro.com',
+  },
+];
+
+const LeadershipTeamPage = () => {
   const [tab, setTab] = useState<string>(TABS[0]);
   const [search, setSearch] = useState<string>('');
   const [filter, setFilter] = useState<string>('All');
@@ -207,64 +265,68 @@ export default function LeadershipTeamPage() {
   }
 
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Leadership Team | Tekvoro Technologies"
+        description="Meet our leadership team of experienced professionals driving innovation and growth at Tekvoro Technologies. Learn about our executives and their vision for the future."
+        keywords="leadership team, executives, management team, company leadership, executive profiles, leadership bios, management"
+        ogImage="/images/leadership-team-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Leadership Team",
+          "description": "Meet our leadership team of experienced professionals driving innovation",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
-      {/* Featured Leader Hero (only for Leadership tab) */}
-      {tab === 'Leadership' && (
-        <section className="relative w-full bg-gradient-to-br from-black via-yellow-900 to-neutral-900 text-white overflow-hidden py-20 md:py-28">
-          <div className="container-custom flex flex-col md:flex-row items-center gap-16">
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="flex-1"
-            >
-              <div className="mb-4 flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 text-yellow-400 text-xs font-semibold">
-                  Featured
-                </span>
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 text-yellow-400 text-xs font-semibold">
-                  AI 2025
-                </span>
-              </div>
-              <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-white via-yellow-300 to-yellow-500 bg-clip-text text-transparent drop-shadow-lg">
-                {TEAM_DATA.Leadership[0].name}
-              </h1>
-              <div className="text-yellow-400 font-semibold mb-2 text-lg">{TEAM_DATA.Leadership[0].role}</div>
-              <p className="text-xl md:text-2xl text-gray-200 max-w-2xl mb-8 font-light">
-                {TEAM_DATA.Leadership[0].bio}
-              </p>
-              <div className="flex gap-4 mt-2">
-                <a href={TEAM_DATA.Leadership[0].linkedin} className="text-yellow-400 hover:text-white" target="_blank" rel="noopener noreferrer"><Linkedin className="w-6 h-6" /></a>
-                <a href={TEAM_DATA.Leadership[0].twitter} className="text-yellow-400 hover:text-white" target="_blank" rel="noopener noreferrer"><Twitter className="w-6 h-6" /></a>
-              </div>
-              <button
-                className="mt-8 px-6 py-2 rounded-lg bg-yellow-400 text-black font-bold shadow hover:bg-white hover:text-black transition text-base"
-                onClick={() => openModal(TEAM_DATA.Leadership[0])}
-              >
-                Learn More
-              </button>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="flex-1 relative flex justify-center"
-            >
-              <img
-                src={TEAM_DATA.Leadership[0].image}
-                alt={TEAM_DATA.Leadership[0].name}
-                className="rounded-2xl shadow-2xl w-72 h-72 object-cover border-4 border-yellow-400"
-              />
+      <section className="relative w-full bg-gradient-to-br from-black via-indigo-900 to-black text-white overflow-hidden py-24">
+        <div className="container-custom relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6 bg-gradient-to-r from-white via-indigo-400 to-blue-500 bg-clip-text text-transparent">
+              Leadership Team
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto font-light">
+              Meet the visionaries and experts leading Tekvoro into the future.
+            </p>
+          </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {leaders.map((leader, idx) => (
               <motion.div
-                className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-yellow-400/40 via-black/0 to-black/0 rounded-full blur-2xl opacity-50 animate-pulse"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ repeat: Infinity, duration: 7 }}
-              />
-            </motion.div>
+                key={leader.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-8 shadow-xl border border-white/10 backdrop-blur-xl flex flex-col items-center text-center hover:scale-105 transition-transform duration-300"
+              >
+                <img
+                  src={leader.image}
+                  alt={leader.name}
+                  className="w-32 h-32 rounded-full object-cover mb-6 border-4 border-indigo-400 shadow-lg"
+                />
+                <h3 className="text-2xl font-bold text-white mb-2">{leader.name}</h3>
+                <p className="text-indigo-400 font-semibold mb-2">{leader.title}</p>
+                <p className="text-gray-300 mb-4 text-sm">{leader.bio}</p>
+                <div className="flex gap-4 justify-center mt-2">
+                  <a href={leader.linkedin} aria-label="LinkedIn" className="hover:text-indigo-400 transition-colors"><Linkedin className="w-5 h-5" /></a>
+                  <a href={leader.twitter} aria-label="Twitter" className="hover:text-blue-400 transition-colors"><Twitter className="w-5 h-5" /></a>
+                  <a href={`mailto:${leader.email}`} aria-label="Email" className="hover:text-pink-400 transition-colors"><Mail className="w-5 h-5" /></a>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
       {/* Tabs, Search, Filter, and Grid */}
       <section className="py-8 bg-black">
         <div className="container-custom">
@@ -454,4 +516,6 @@ export default function LeadershipTeamPage() {
       <Footer />
     </div>
   );
-} 
+}
+
+export default LeadershipTeamPage; 

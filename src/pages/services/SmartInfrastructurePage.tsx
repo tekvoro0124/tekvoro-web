@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { Building2, Wifi, Server, Activity, Globe2 } from 'lucide-react';
 
 const features = [
@@ -39,7 +40,25 @@ const stats = [
 
 const SmartInfrastructurePage = () => {
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Smart Infrastructure Solutions | Tekvoro Technologies"
+        description="Build intelligent infrastructure that adapts and optimizes automatically. Our smart infrastructure solutions enhance efficiency, security, and sustainability."
+        keywords="smart infrastructure, IoT infrastructure, intelligent buildings, smart cities, infrastructure automation, connected systems, IoT solutions"
+        ogImage="/images/smart-infrastructure-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Smart Infrastructure Solutions",
+          "description": "Build intelligent infrastructure that adapts and optimizes automatically",
+          "provider": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          },
+          "serviceType": "Smart Infrastructure Development"
+        }}
+      />
       <Navbar />
       {/* Immersive Hero Section */}
       <section className="relative w-full bg-gradient-to-br from-black via-gray-900 to-neutral-900 text-white overflow-hidden py-24">

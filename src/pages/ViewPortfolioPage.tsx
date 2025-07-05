@@ -1,5 +1,6 @@
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Sparkles, ArrowRight, ExternalLink, Github, Target, Users, Star, Award, Search } from 'lucide-react';
@@ -56,6 +57,23 @@ export default function ViewPortfolioPage() {
 
   return (
     <div className="bg-black min-h-screen flex flex-col">
+      <SEO 
+        title="View Portfolio | Tekvoro Technologies"
+        description="Explore our portfolio of successful projects and client work. See how we've helped businesses across industries achieve their goals through innovative technology solutions."
+        keywords="portfolio, projects, client work, case studies, project examples, work samples, successful projects"
+        ogImage="/images/view-portfolio-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "View Portfolio",
+          "description": "Explore our portfolio of successful projects and client work",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
       
       {/* Hero Section */}

@@ -1,418 +1,197 @@
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import SEO from '../../components/SEO';
+import { Calendar, Clock, Users, Play, ArrowRight, Search } from 'lucide-react';
 
-const categories = ['All', 'AI', 'Cloud', 'IoT'];
-
-type Webinar = {
-  id: number;
-  title: string;
-  date: string;
-  time: string;
-  speaker: string;
-  desc: string;
-  link?: string;
-  image?: string;
-  category: string;
-  featured?: boolean;
-  recording?: string;
-};
-
-const webinars: Webinar[] = [
+const webinars = [
   {
     id: 1,
-    title: 'AI 2025: The Future of Intelligence',
-    date: '2024-07-01',
-    time: '17:00 GMT',
-    speaker: 'Dr. Priya Nair',
-    desc: 'A deep dive into the next wave of AI breakthroughs, ethics, and opportunities for 2025 and beyond.',
-    link: '#',
-    image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=900&q=80',
-    category: 'AI',
-    featured: true,
+    title: 'AI for Business Leaders: Trends & Opportunities',
+    description: 'Discover how AI is transforming business strategy and operations. Learn from industry experts and get your questions answered live.',
+    date: '2024-12-22',
+    time: '04:00 PM - 05:30 PM',
+    speakers: ['Dr. Sarah Chen', 'Michael Rodriguez'],
+    attendees: 120,
+    registration: true,
+    image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80',
+    tags: ['AI', 'Business', 'Webinar'],
   },
   {
     id: 2,
-    title: 'AI in the Real World',
-    date: '2024-07-10',
-    time: '16:00 GMT',
-    speaker: 'Dr. Priya Nair',
-    desc: 'Explore practical AI applications and case studies with industry expert Dr. Priya Nair.',
-    link: '#',
-    category: 'AI',
+    title: 'Cloud Security Essentials: Protecting Your Data',
+    description: 'A practical webinar on cloud security best practices, compliance, and real-world case studies.',
+    date: '2024-12-28',
+    time: '11:00 AM - 12:00 PM',
+    speakers: ['Dr. Emily Watson'],
+    attendees: 80,
+    registration: true,
+    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
+    tags: ['Cloud', 'Security', 'Webinar'],
   },
   {
     id: 3,
-    title: 'Cloud Security Best Practices',
-    date: '2024-07-22',
-    time: '18:00 GMT',
-    speaker: 'Alex Chen',
-    desc: 'Learn how to secure your cloud infrastructure and data from leading security architect Alex Chen.',
-    link: '#',
-    category: 'Cloud',
-  },
-  {
-    id: 4,
-    title: 'Next-Gen IoT Solutions',
-    date: '2024-08-05',
-    time: '15:00 GMT',
-    speaker: 'Maria Garcia',
-    desc: 'Discover the future of connected devices and smart infrastructure with Maria Garcia.',
-    link: '#',
-    category: 'IoT',
+    title: 'Digital Transformation: Roadmap for 2025',
+    description: 'Explore the key steps and strategies for successful digital transformation in the coming year.',
+    date: '2025-01-10',
+    time: '03:00 PM - 04:30 PM',
+    speakers: ['Michael Rodriguez', 'Lisa Park'],
+    attendees: 95,
+    registration: true,
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80',
+    tags: ['Digital Transformation', 'Strategy', 'Webinar'],
   },
 ];
 
-const pastWebinars: Webinar[] = [
-  {
-    id: 101,
-    title: 'AI Ethics & Society',
-    date: '2024-05-10',
-    time: '15:00 GMT',
-    speaker: 'Dr. Priya Nair',
-    desc: 'A discussion on the ethical implications of AI in society.',
-    recording: '#',
-    category: 'AI',
-  },
-  {
-    id: 102,
-    title: 'Cloud Cost Optimization',
-    date: '2024-04-18',
-    time: '17:00 GMT',
-    speaker: 'Alex Chen',
-    desc: 'Tips and strategies for reducing cloud spend.',
-    recording: '#',
-    category: 'Cloud',
-  },
-];
+const UpcomingWebinarsPage = () => {
+  const [searchQuery, setSearchQuery] = useState('');
 
-function getGoogleCalendarUrl(webinar: Webinar) {
-  const start = webinar.date.replace(/-/g, '') + 'T' + webinar.time.replace(':', '') + '00Z';
-  const end = start; // For demo, 1hr duration can be calculated if needed
-  const details = encodeURIComponent(webinar.desc + '\nSpeaker: ' + webinar.speaker);
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(webinar.title)}&dates=${start}/${end}&details=${details}`;
-}
-
-export default function UpcomingWebinarsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [showPast, setShowPast] = useState<boolean>(false);
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [modalWebinar, setModalWebinar] = useState<Webinar | null>(null);
-  const [form, setForm] = useState<{ name: string; email: string; message: string }>({ name: '', email: '', message: '' });
-  const [submitted, setSubmitted] = useState<boolean>(false);
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  const featured = webinars.find(w => w.featured) || webinars[0];
-  const filtered = selectedCategory === 'All' ? webinars : webinars.filter(w => w.category === selectedCategory);
-  const rest = filtered.filter(w => w.id !== featured.id);
-  const filteredPast = selectedCategory === 'All' ? pastWebinars : pastWebinars.filter(w => w.category === selectedCategory);
-
-  // Modal accessibility
-  function handleModalKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === 'Escape') setModalOpen(false);
-    if (modalRef.current) {
-      const focusable = modalRef.current.querySelectorAll<HTMLElement>('button, [href], input, textarea, [tabindex]:not([tabindex="-1"])');
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.key === 'Tab') {
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    }
-  }
-
-  function openModal(webinar: Webinar) {
-    setModalWebinar(webinar);
-    setModalOpen(true);
-    setForm({ name: '', email: '', message: '' });
-    setSubmitted(false);
-  }
-
-  function handleFormChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
-
-  function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setModalOpen(false);
-      setSubmitted(false);
-      setForm({ name: '', email: '', message: '' });
-    }, 1800);
-  }
+  const filteredWebinars = webinars.filter(webinar =>
+    webinar.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    webinar.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    webinar.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Upcoming Webinars | Tekvoro Technologies"
+        description="Register for our upcoming webinars and virtual events. Learn from industry experts, discover new technologies, and gain valuable insights from the comfort of your home or office."
+        keywords="upcoming webinars, virtual events, online seminars, technology webinars, educational webinars, virtual learning, online events"
+        ogImage="/images/upcoming-webinars-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Upcoming Webinars",
+          "description": "Register for our upcoming webinars and virtual events",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
-      {/* Toggle Tabs */}
-      <section className="w-full bg-neutral-950 border-b border-neutral-800">
-        <div className="container-custom py-4 flex flex-wrap gap-3 justify-center items-center">
-          <button
-            className={`px-5 py-2 rounded-full font-semibold text-sm transition-all border-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 ${!showPast ? 'bg-yellow-400 text-black border-yellow-400 shadow-lg' : 'bg-black text-yellow-400 border-neutral-800 hover:bg-neutral-900 hover:border-yellow-400'}`}
-            onClick={() => setShowPast(false)}
-          >
-            Upcoming
-          </button>
-          <button
-            className={`px-5 py-2 rounded-full font-semibold text-sm transition-all border-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 ${showPast ? 'bg-yellow-400 text-black border-yellow-400 shadow-lg' : 'bg-black text-yellow-400 border-neutral-800 hover:bg-neutral-900 hover:border-yellow-400'}`}
-            onClick={() => setShowPast(true)}
-          >
-            Past
-          </button>
-          {categories.map((cat) => (
-            <motion.button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-5 py-2 rounded-full font-semibold text-sm transition-all border-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 ${selectedCategory === cat
-                ? 'bg-yellow-400 text-black border-yellow-400 shadow-lg'
-                : 'bg-black text-yellow-400 border-neutral-800 hover:bg-neutral-900 hover:border-yellow-400'}`}
-              whileTap={{ scale: 0.97 }}
-              layout
-            >
-              {cat}
-            </motion.button>
-          ))}
-        </div>
-      </section>
-
-      {/* Featured Webinar Hero (only for Upcoming) */}
-      {!showPast && (
-        <section className="relative w-full bg-gradient-to-br from-black via-yellow-900 to-neutral-900 text-white overflow-hidden py-20 md:py-28">
-          <div className="container-custom flex flex-col md:flex-row items-center gap-16">
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="flex-1"
-            >
-              <div className="mb-4 flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 text-yellow-400 text-xs font-semibold">
-                  Featured
-                </span>
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 text-yellow-400 text-xs font-semibold">
-                  {featured.category}
-                </span>
-              </div>
-              <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-white via-yellow-300 to-yellow-500 bg-clip-text text-transparent drop-shadow-lg">
-                {featured.title}
-              </h1>
-              <p className="text-xl md:text-2xl text-gray-200 max-w-2xl mb-8 font-light">
-                {featured.desc}
-              </p>
-              <div className="flex items-center gap-6 text-sm text-gray-400 mb-4">
-                <span>{featured.date}</span>
-                <span>•</span>
-                <span>{featured.time}</span>
-                <span>•</span>
-                <span>Speaker: {featured.speaker}</span>
-              </div>
-              <div className="flex gap-4 mt-4">
-                <motion.button
-                  className="inline-block px-10 py-4 rounded-lg bg-yellow-400 text-black font-bold shadow-lg hover:bg-white hover:text-black transition text-lg"
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => openModal(featured)}
-                >
-                  Register Now
-                </motion.button>
-                <a
-                  href={getGoogleCalendarUrl(featured)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block px-6 py-4 rounded-lg bg-black text-yellow-400 font-bold shadow hover:bg-yellow-400 hover:text-black transition text-lg border border-yellow-400"
-                >
-                  Add to Google Calendar
-                </a>
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="flex-1 relative"
-            >
-              <img
-                src={featured.image}
-                alt={featured.title}
-                className="rounded-2xl shadow-2xl w-full h-80 md:h-96 object-cover border-4 border-white/10"
-              />
-              <motion.div
-                className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-yellow-400/40 via-black/0 to-black/0 rounded-full blur-2xl opacity-50 animate-pulse"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ repeat: Infinity, duration: 7 }}
-              />
-            </motion.div>
-          </div>
-        </section>
-      )}
-
-      {/* Webinars List */}
-      <section className="container-custom py-16 flex-1">
-        <AnimatePresence mode="wait">
+      <section className="relative w-full bg-gradient-to-br from-black via-blue-900 to-black text-white overflow-hidden py-24">
+        <div className="container-custom relative z-10">
           <motion.div
-            key={selectedCategory + (showPast ? '-past' : '-upcoming')}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-10"
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
           >
-            {(!showPast ? rest : filteredPast).length === 0 && (
-              <div className="col-span-full text-center text-gray-400 text-lg py-20">No webinars in this category yet.</div>
-            )}
-            {(!showPast ? rest : filteredPast).map((w, idx) => (
-              <motion.div
-                key={w.id}
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6 bg-gradient-to-r from-white via-blue-400 to-cyan-500 bg-clip-text text-transparent">
+              Upcoming Webinars
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto font-light">
+              Join our live webinars to learn from industry experts and stay ahead in tech and business.
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-2xl mx-auto mb-12"
+          >
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search webinars..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50"
+              />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+      <section className="py-16 bg-black">
+        <div className="container-custom">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-4xl font-bold text-white mb-12 text-center"
+          >
+            Live & Upcoming
+          </motion.h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredWebinars.map((webinar, idx) => (
+              <motion.article
+                key={webinar.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-br from-gray-900 via-black to-neutral-950 rounded-2xl shadow-xl p-8 border border-white/10 hover:shadow-lg hover:scale-105 transition-all text-left"
+                className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-6 shadow-xl border border-white/10 backdrop-blur-xl hover:scale-105 transition-transform duration-300 group"
               >
-                <div className="flex flex-col gap-2 mb-2">
-                  <h2 className="text-2xl font-bold text-white mb-1">{w.title}</h2>
-                  <div className="text-sm text-yellow-400 font-semibold mb-1">{w.date} • {w.time}</div>
-                  <div className="text-sm text-gray-400 mb-2">Speaker: {w.speaker}</div>
-                </div>
-                <p className="text-gray-300 text-base mb-4">{w.desc}</p>
-                <div className="flex gap-4 mt-2">
-                  {!showPast && (
-                    <motion.button
-                      className="inline-block px-6 py-2 rounded-lg bg-yellow-400 text-black font-bold shadow hover:bg-white hover:text-black transition text-base"
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => openModal(w)}
-                    >
-                      Register
-                    </motion.button>
-                  )}
-                  <a
-                    href={getGoogleCalendarUrl(w)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block px-4 py-2 rounded-lg bg-black text-yellow-400 font-bold shadow hover:bg-yellow-400 hover:text-black transition text-base border border-yellow-400"
-                  >
-                    Add to Google Calendar
-                  </a>
-                  {showPast && 'recording' in w && w.recording && (
-                    <a
-                      href={w.recording}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block px-4 py-2 rounded-lg bg-yellow-400 text-black font-bold shadow hover:bg-white hover:text-black transition text-base"
-                    >
-                      Watch Recording
-                    </a>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
-      </section>
-
-      {/* Registration Modal */}
-      <AnimatePresence>
-        {modalOpen && (
-          <motion.div
-            className="fixed inset-0 z-[99] bg-black/70 backdrop-blur-sm flex items-center justify-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            aria-modal="true"
-            role="dialog"
-            tabIndex={-1}
-            onClick={e => { if (e.target === e.currentTarget) setModalOpen(false); }}
-          >
-            <motion.div
-              ref={modalRef}
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="bg-neutral-900 text-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative border border-yellow-400 focus:outline-none"
-              onKeyDown={handleModalKeyDown}
-              tabIndex={0}
-              autoFocus
-            >
-              <button
-                className="absolute top-4 right-4 text-2xl text-gray-400 hover:text-red-500 focus:outline-none"
-                aria-label="Close modal"
-                onClick={() => setModalOpen(false)}
-              >
-                &times;
-              </button>
-              {!submitted ? (
-                <form onSubmit={handleFormSubmit} className="flex flex-col gap-5 mt-2">
-                  <h3 className="text-2xl font-bold mb-2 text-yellow-400">Register for {modalWebinar?.title}</h3>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Your Name"
-                    className="bg-neutral-800 border border-yellow-400 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    value={form.name}
-                    onChange={handleFormChange}
-                    required
+                <div className="relative mb-6">
+                  <img
+                    src={webinar.image}
+                    alt={webinar.title}
+                    className="w-full h-48 object-cover rounded-xl shadow-lg group-hover:shadow-2xl transition-shadow"
                   />
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Your Email"
-                    className="bg-neutral-800 border border-yellow-400 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    value={form.email}
-                    onChange={handleFormChange}
-                    required
-                  />
-                  <textarea
-                    name="message"
-                    placeholder="Message (optional)"
-                    className="bg-neutral-800 border border-yellow-400 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 min-h-[80px]"
-                    value={form.message}
-                    onChange={handleFormChange}
-                  />
-                  <div className="flex gap-4 mt-2">
-                    <button
-                      type="submit"
-                      className="flex-1 bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    >
-                      Submit
-                    </button>
-                    <button
-                      type="button"
-                      className="flex-1 bg-neutral-700 hover:bg-neutral-800 text-gray-300 font-bold py-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                      onClick={() => setModalOpen(false)}
-                    >
-                      Cancel
-                    </button>
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-blue-400 text-black text-sm font-semibold rounded-full">
+                      Webinar
+                    </span>
                   </div>
-                </form>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex flex-col items-center justify-center min-h-[180px]"
+                </div>
+                <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {new Date(webinar.date).toLocaleDateString()}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {webinar.time}
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-blue-400 transition-colors">
+                  {webinar.title}
+                </h3>
+                <p className="text-gray-300 text-sm mb-4 line-clamp-3">
+                  {webinar.description}
+                </p>
+                <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
+                  <div className="flex items-center gap-1">
+                    <Users className="w-3 h-3" />
+                    {webinar.attendees}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Play className="w-3 h-3" />
+                    Live
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {webinar.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-1 bg-white/10 rounded-full text-xs text-gray-300 border border-white/20"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <motion.button
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-400 text-black font-bold rounded-lg hover:bg-white transition-colors text-sm"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <div className="text-3xl mb-4">🎉</div>
-                  <div className="text-lg font-bold text-yellow-400 mb-2">Thank you!</div>
-                  <div className="text-gray-200">Your registration has been received.</div>
-                </motion.div>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  Register
+                  <ArrowRight className="w-3 h-3" />
+                </motion.button>
+              </motion.article>
+            ))}
+          </div>
+        </div>
+      </section>
       <Footer />
     </div>
   );
-} 
+};
+
+export default UpcomingWebinarsPage; 

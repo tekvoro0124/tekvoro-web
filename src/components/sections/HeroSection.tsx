@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../layout/Navbar';
 import Scene from '../Scene';
 import type { ZoneKey } from '../Scene';
-import { ArrowRight, Award } from 'lucide-react';
+import { ArrowRight, Award, LayoutDashboard } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const ZONES: { key: ZoneKey; title: string; desc: string }[] = [

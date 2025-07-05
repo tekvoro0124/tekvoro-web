@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { BarChart2, Activity, TrendingUp, Brain, Zap } from 'lucide-react';
 
 const features = [
@@ -33,6 +34,24 @@ const features = [
 const PredictiveAnalyticsPage = () => {
   return (
     <div className="bg-black min-h-screen flex flex-col">
+      <SEO 
+        title="Predictive Analytics Solutions | Tekvoro Technologies"
+        description="Leverage data-driven insights to predict trends, optimize operations, and make informed decisions. Our predictive analytics solutions transform raw data into actionable intelligence."
+        keywords="predictive analytics, data analytics, business intelligence, machine learning, data science, forecasting, trend analysis, predictive modeling"
+        ogImage="/images/predictive-analytics-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Predictive Analytics Solutions",
+          "description": "Leverage data-driven insights to predict trends and optimize operations",
+          "provider": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          },
+          "serviceType": "Predictive Analytics"
+        }}
+      />
       <Navbar />
       {/* Side-by-side Hero Section */}
       <section className="relative w-full bg-gradient-to-br from-black via-gray-900 to-neutral-900 text-white overflow-hidden py-20">

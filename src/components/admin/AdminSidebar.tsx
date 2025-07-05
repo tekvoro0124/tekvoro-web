@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Settings, Users, FileText, Image, Mail, X, PanelLeft, BookOpen, Award, LayoutDashboard, Edit } from 'lucide-react';
+import { Home, Settings, Users, FileText, Image, Mail, X, PanelLeft, BookOpen, Award, LayoutDashboard, Edit, TrendingUp } from 'lucide-react';
 import Logo from '../layout/Logo';
 
 interface AdminSidebarProps {
@@ -10,6 +10,7 @@ interface AdminSidebarProps {
 const AdminSidebar = ({ isOpen, closeSidebar }: AdminSidebarProps) => {
   const navItems = [
     { name: 'Dashboard', path: '/admin', icon: Home },
+    { name: 'Analytics', path: '/admin/analytics', icon: TrendingUp },
     { name: 'Blog Subscriptions', path: '/admin/blog-subscribers', icon: Mail },
     { name: 'Email Campaigns', path: '/admin/email-campaigns', icon: Users },
     { name: 'SEO Tools', path: '/admin/seo-tools', icon: Settings },

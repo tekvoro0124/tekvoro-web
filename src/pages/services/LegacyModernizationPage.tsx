@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
+import { RefreshCw, Zap, Shield, TrendingUp, ArrowRight, CheckCircle, Database, Cloud } from 'lucide-react';
 
 const features = [
   {
@@ -50,7 +52,25 @@ const futures = [
 
 const LegacyModernizationPage = () => {
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Legacy System Modernization | Tekvoro Technologies"
+        description="Transform legacy systems into modern, scalable solutions. We help organizations migrate from outdated technology to cloud-native, agile platforms."
+        keywords="legacy modernization, system migration, cloud migration, digital transformation, legacy software, technology upgrade, system modernization"
+        ogImage="/images/legacy-modernization-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Legacy System Modernization",
+          "description": "Transform legacy systems into modern, scalable solutions with cloud-native platforms",
+          "provider": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          },
+          "serviceType": "Legacy System Modernization"
+        }}
+      />
       <Navbar />
       {/* Futuristic Hero Banner */}
       <section className="relative flex flex-col justify-center items-center min-h-[60vh] bg-gradient-to-br from-black via-gray-900 to-neutral-900 text-white overflow-hidden">

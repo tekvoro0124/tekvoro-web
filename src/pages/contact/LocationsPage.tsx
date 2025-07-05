@@ -1,4 +1,7 @@
 import { motion } from 'framer-motion';
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import PageHeader from '../../components/layout/PageHeader';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
@@ -27,13 +30,35 @@ const LocationsPage = () => {
   ];
 
   return (
-    <div className="animate-fade-in">
-      <PageHeader
-        title="Office Locations"
-        description="Find our offices worldwide and get in touch with our local teams."
-        bgImage="https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Our Locations | Tekvoro Technologies"
+        description="Find our offices and locations worldwide. Connect with our local teams and discover how we serve clients across different regions and time zones."
+        keywords="locations, offices, global presence, worldwide offices, local teams, regional offices, contact locations"
+        ogImage="/images/locations-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Our Locations",
+          "description": "Find our offices and locations worldwide",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
       />
+      <Navbar />
+      <div className="animate-fade-in">
+        <PageHeader
+          title="Office Locations"
+          description="Find our offices worldwide and get in touch with our local teams."
+          bgImage="https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+        />
 
+        <section className="section px-4">
+          <div className="container-custom">
+            <div className="space-y-16">
       <section className="section px-4">
         <div className="container-custom">
           <div className="space-y-16">

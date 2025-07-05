@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { Beaker, UserPlus, Star, MessageCircle, CheckCircle, ChevronDown, ChevronUp, Users, Award, Rocket, Lightbulb } from 'lucide-react';
 
 const steps = [
@@ -45,7 +46,7 @@ const stats = [
   { label: 'Community Impact', value: '98%' },
 ];
 
-export default function BetaProgramsPage() {
+const BetaProgramsPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', interest: '', motivation: '' });
   const [submitted, setSubmitted] = useState(false);
@@ -360,4 +361,6 @@ export default function BetaProgramsPage() {
       <Footer />
     </div>
   );
-} 
+}
+
+export default BetaProgramsPage; 

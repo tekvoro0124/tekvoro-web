@@ -1,11 +1,29 @@
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, Users, Heart, Target, BookOpen } from 'lucide-react';
 
 export default function CulturePage() {
   return (
     <div className="bg-black min-h-screen flex flex-col">
+      <SEO 
+        title="Our Culture | Tekvoro Technologies"
+        description="Discover our unique company culture that fosters innovation, collaboration, and growth. Learn about our values, work environment, and what makes Tekvoro Technologies a great place to work."
+        keywords="company culture, workplace culture, team culture, values, work environment, employee culture, organizational culture"
+        ogImage="/images/culture-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Our Culture",
+          "description": "Discover our unique company culture that fosters innovation and collaboration",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
       
       <section className="relative w-full bg-gradient-to-br from-black via-neutral-900 to-black text-white overflow-hidden py-32 px-4">

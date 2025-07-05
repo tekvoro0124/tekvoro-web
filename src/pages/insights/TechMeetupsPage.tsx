@@ -1,7 +1,9 @@
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, Clock, MapPin, Users, ArrowRight, Search } from 'lucide-react';
 
 const categories = ['All', 'AI', 'Cloud', 'IoT'];
 
@@ -11,52 +13,63 @@ type Meetup = {
   date: string;
   location: string;
   desc: string;
-  rsvp: string;
+  rsvp: boolean;
   category: string;
   featured?: boolean;
   image?: string;
   speaker?: string;
+  status: string;
+  attendees: number;
+  time: string;
+  description: string;
+  tags: string[];
 };
 
 const meetups: Meetup[] = [
   {
     id: 1,
-    title: 'AI 2025: Community Night',
-    date: '2024-07-18',
-    location: 'Tekvoro HQ, Hyderabad',
-    desc: 'A special AI 2025 meetup with Dr. Priya Nair. Demos, lightning talks, and networking with the future of AI.',
-    rsvp: '#',
+    title: 'Hyderabad AI & ML Meetup',
+    description: 'Connect with AI and ML enthusiasts, share ideas, and learn about the latest trends in artificial intelligence.',
+    desc: 'Connect with AI and ML enthusiasts, share ideas, and learn about the latest trends in artificial intelligence.',
+    date: '2024-12-27',
+    time: '06:00 PM - 08:00 PM',
+    location: 'Tekvoro Innovation Center, Hyderabad',
+    attendees: 60,
+    rsvp: true,
     category: 'AI',
-    featured: true,
-    image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=900&q=80',
-    speaker: 'Dr. Priya Nair',
+    image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80',
+    tags: ['AI', 'ML', 'Meetup'],
+    status: 'upcoming',
   },
   {
     id: 2,
-    title: 'Cloud & DevOps Meetup',
-    date: '2024-08-02',
-    location: 'Silicon Valley, USA',
-    desc: 'Hands-on sessions and expert panels on cloud and DevOps trends.',
-    rsvp: '#',
+    title: 'Cloud Native Hyderabad',
+    description: 'A meetup for cloud engineers and developers to discuss cloud-native technologies and best practices.',
+    desc: 'A meetup for cloud engineers and developers to discuss cloud-native technologies and best practices.',
+    date: '2024-12-15',
+    time: '05:00 PM - 07:00 PM',
+    location: 'Cloud Cafe, Hyderabad',
+    attendees: 40,
+    rsvp: true,
     category: 'Cloud',
+    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
+    tags: ['Cloud', 'DevOps', 'Meetup'],
+    status: 'upcoming',
   },
   {
     id: 3,
-    title: 'IoT & Smart Devices Gathering',
-    date: '2024-08-20',
-    location: 'Berlin, Germany',
-    desc: 'Showcase of IoT projects and networking with industry leaders.',
-    rsvp: '#',
+    title: 'Past: IoT & Embedded Systems Meetup',
+    description: 'A recap of our last IoT meetup with hands-on demos and networking.',
+    desc: 'A recap of our last IoT meetup with hands-on demos and networking.',
+    date: '2024-11-20',
+    time: '06:00 PM - 08:00 PM',
+    location: 'Tekvoro Innovation Center, Hyderabad',
+    attendees: 35,
+    rsvp: false,
     category: 'IoT',
-  },
-  {
-    id: 4,
-    title: 'AI & ML Community Night',
-    date: '2024-09-10',
-    location: 'Bangalore, India',
-    desc: 'Network with AI/ML enthusiasts, see demos, and join lightning talks.',
-    rsvp: '#',
-    category: 'AI',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80',
+    tags: ['IoT', 'Embedded', 'Meetup'],
+    status: 'past',
   },
 ];
 
@@ -73,8 +86,8 @@ const priya = {
   ],
 };
 
-export default function TechMeetupsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+const TechMeetupsPage = () => {
+  const [selectedCategory] = useState<string>('All');
   const [rsvpOpen, setRsvpOpen] = useState<boolean>(false);
   const [rsvpMeetup, setRsvpMeetup] = useState<Meetup | null>(null);
   const [bioOpen, setBioOpen] = useState<boolean>(false);
@@ -85,16 +98,25 @@ export default function TechMeetupsPage() {
   const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
   const [detailsMeetup, setDetailsMeetup] = useState<Meetup | null>(null);
   const detailsRef = useRef<HTMLDivElement | null>(null);
-  const [countdown, setCountdown] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [suggestOpen, setSuggestOpen] = useState<boolean>(false);
   const [suggestForm, setSuggestForm] = useState<{ name: string; email: string; idea: string; company?: string; role?: string }>({ name: '', email: '', idea: '', company: '', role: '' });
   const [suggestSubmitting, setSuggestSubmitting] = useState<boolean>(false);
   const [suggestSubmitted, setSuggestSubmitted] = useState<boolean>(false);
   const suggestRef = useRef<HTMLDivElement | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showUpcoming, setShowUpcoming] = useState(true);
 
   const featured = meetups.find(m => m.featured) || meetups[0];
   const filtered = selectedCategory === 'All' ? meetups : meetups.filter(m => m.category === selectedCategory);
-  const rest = filtered.filter(m => m.id !== featured.id);
+
+  const filteredMeetups = meetups.filter(meetup =>
+    meetup.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    meetup.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    meetup.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  const upcomingMeetups = filteredMeetups.filter(m => m.status === 'upcoming');
+  const pastMeetups = filteredMeetups.filter(m => m.status === 'past');
 
   useEffect(() => {
     function updateCountdown() {
@@ -105,7 +127,7 @@ export default function TechMeetupsPage() {
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
       const seconds = Math.floor((diff / 1000) % 60);
-      setCountdown({ days, hours, minutes, seconds });
+      // Countdown state is used for display purposes
     }
     updateCountdown();
     const interval = setInterval(updateCountdown, 1000);
@@ -282,161 +304,163 @@ export default function TechMeetupsPage() {
   }
 
   return (
-    <div className="bg-black min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Tech Meetups | Tekvoro Technologies"
+        description="Join our tech meetups and networking events. Connect with fellow developers, share knowledge, and stay updated with the latest technology trends in a collaborative environment."
+        keywords="tech meetups, networking events, developer meetups, technology meetups, community events, tech networking, developer community"
+        ogImage="/images/tech-meetups-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Tech Meetups",
+          "description": "Join our tech meetups and networking events",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
+      />
       <Navbar />
-      {/* Tabs */}
-      <section className="w-full bg-neutral-950 border-b border-neutral-800">
-        <div className="container-custom py-4 flex flex-wrap gap-3 justify-center items-center">
-          {categories.map((cat) => (
-            <motion.button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-5 py-2 rounded-full font-semibold text-sm transition-all border-2 focus:outline-none focus:ring-2 focus:ring-green-400 ${selectedCategory === cat
-                ? 'bg-green-400 text-black border-green-400 shadow-lg'
-                : 'bg-black text-green-400 border-neutral-800 hover:bg-neutral-900 hover:border-green-400'}`}
-              whileTap={{ scale: 0.97 }}
-              layout
-            >
-              {cat}
-            </motion.button>
-          ))}
-        </div>
-      </section>
-      {/* Featured AI 2025 Meetup Hero */}
-      {(selectedCategory === 'All' || selectedCategory === 'AI') && (
-        <section className="relative w-full bg-gradient-to-br from-black via-yellow-900 to-neutral-900 text-white overflow-hidden py-20 md:py-28">
-          {/* Animated AI orbs */}
+      <section className="relative w-full bg-gradient-to-br from-black via-green-900 to-black text-white overflow-hidden py-24">
+        <div className="container-custom relative z-10">
           <motion.div
-            className="absolute left-10 top-10 w-32 h-32 bg-gradient-to-br from-yellow-400/40 via-black/0 to-black/0 rounded-full blur-2xl opacity-40 animate-pulse z-0"
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ repeat: Infinity, duration: 8 }}
-          />
-          <motion.div
-            className="absolute right-10 bottom-10 w-24 h-24 bg-gradient-to-br from-green-400/30 via-black/0 to-black/0 rounded-full blur-2xl opacity-30 animate-pulse z-0"
-            animate={{ scale: [1, 1.08, 1] }}
-            transition={{ repeat: Infinity, duration: 10 }}
-          />
-          {/* Animated SVG lines/nodes */}
-          <svg className="absolute left-0 top-0 w-full h-full pointer-events-none z-0" width="100%" height="100%" viewBox="0 0 1440 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="200" cy="100" r="2.5" fill="#facc15" opacity="0.7">
-              <animate attributeName="cy" values="100;120;100" dur="6s" repeatCount="indefinite" />
-            </circle>
-            <circle cx="600" cy="60" r="2.5" fill="#4ade80" opacity="0.7">
-              <animate attributeName="cy" values="60;80;60" dur="7s" repeatCount="indefinite" />
-            </circle>
-            <circle cx="1200" cy="180" r="2.5" fill="#facc15" opacity="0.7">
-              <animate attributeName="cy" values="180;200;180" dur="5s" repeatCount="indefinite" />
-            </circle>
-            <polyline points="200,100 600,60 1200,180" stroke="#facc15" strokeWidth="1.5" opacity="0.15">
-              <animate attributeName="points" values="200,100 600,60 1200,180;200,120 600,80 1200,200;200,100 600,60 1200,180" dur="6s" repeatCount="indefinite" />
-            </polyline>
-          </svg>
-          <div className="container-custom flex flex-col md:flex-row items-center gap-16 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="flex-1"
-            >
-              <div className="mb-4 flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 text-yellow-400 text-xs font-semibold">
-                  Featured
-                </span>
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 text-yellow-400 text-xs font-semibold">
-                  AI 2025
-                </span>
-              </div>
-              <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-white via-yellow-300 to-yellow-500 bg-clip-text text-transparent drop-shadow-lg">
-                {featured.title}
-              </h1>
-              <div className="text-yellow-400 font-semibold mb-2 text-lg">{featured.date} • {featured.location}</div>
-              <p className="text-xl md:text-2xl text-gray-200 max-w-2xl mb-8 font-light">
-                {featured.desc}
-              </p>
-              {/* Countdown */}
-              <div className="flex items-center gap-4 text-yellow-300 font-mono text-lg mb-6">
-                <span>Starts in:</span>
-                <span>{countdown.days}d</span>
-                <span>{countdown.hours}h</span>
-                <span>{countdown.minutes}m</span>
-                <span>{countdown.seconds}s</span>
-              </div>
-              <div className="flex items-center gap-6 text-sm text-gray-400 mb-4">
-                <span>
-                  Speaker: <button className="underline text-yellow-300 hover:text-white transition" onClick={openBio} type="button">{featured.speaker}</button>
-                </span>
-              </div>
-              <div className="flex gap-4 mt-4">
-                <motion.button
-                  className="inline-block px-10 py-4 rounded-lg bg-yellow-400 text-black font-bold shadow-lg hover:bg-white hover:text-black transition text-lg"
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => openRsvp(featured)}
-                >
-                  RSVP Now
-                </motion.button>
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="flex-1 relative"
-            >
-              <img
-                src={featured.image}
-                alt={featured.title}
-                className="rounded-2xl shadow-2xl w-full h-80 md:h-96 object-cover border-4 border-yellow-400"
-              />
-              <motion.div
-                className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-yellow-400/40 via-black/0 to-black/0 rounded-full blur-2xl opacity-50 animate-pulse"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ repeat: Infinity, duration: 7 }}
-              />
-            </motion.div>
-          </div>
-        </section>
-      )}
-      {/* Meetups List */}
-      <section className="container-custom py-16 flex-1">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedCategory}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-10"
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
           >
-            {rest.length === 0 && (
-              <div className="col-span-full text-center text-gray-400 text-lg py-20">No meetups in this category yet.</div>
-            )}
-            {rest.map((m, idx) => (
-              <motion.div
-                key={m.id}
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6 bg-gradient-to-r from-white via-green-400 to-teal-500 bg-clip-text text-transparent">
+              Tech Meetups
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto font-light">
+              Join our tech meetups to connect, learn, and grow with the community.
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-2xl mx-auto mb-12"
+          >
+            <div className="relative mb-4">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search meetups..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50"
+              />
+            </div>
+            <div className="flex gap-4 justify-center">
+              <button
+                className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all border-2 focus:outline-none focus:ring-2 focus:ring-green-400 ${showUpcoming ? 'bg-green-400 text-black border-green-400 shadow-lg' : 'bg-black/50 text-green-400 border-neutral-800 hover:bg-neutral-900 hover:border-green-400'}`}
+                onClick={() => setShowUpcoming(true)}
+              >
+                Upcoming
+              </button>
+              <button
+                className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all border-2 focus:outline-none focus:ring-2 focus:ring-gray-400 ${!showUpcoming ? 'bg-gray-400 text-black border-gray-400 shadow-lg' : 'bg-black/50 text-gray-400 border-neutral-800 hover:bg-neutral-900 hover:border-gray-400'}`}
+                onClick={() => setShowUpcoming(false)}
+              >
+                Past
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+      <section className="py-16 bg-black">
+        <div className="container-custom">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-4xl font-bold text-white mb-12 text-center"
+          >
+            {showUpcoming ? 'Upcoming Meetups' : 'Past Meetups'}
+          </motion.h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {(showUpcoming ? upcomingMeetups : pastMeetups).map((meetup, idx) => (
+              <motion.article
+                key={meetup.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-br from-gray-900 via-black to-neutral-950 rounded-2xl shadow-xl p-8 border border-white/10 hover:shadow-lg hover:scale-105 transition-all text-left cursor-pointer"
-                onClick={() => openDetails(m)}
-                tabIndex={0}
-                role="button"
-                aria-label={`View details for ${m.title}`}
+                className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-6 shadow-xl border border-white/10 backdrop-blur-xl hover:scale-105 transition-transform duration-300 group"
               >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
-                  <div>
-                    <h2 className="text-2xl font-bold text-white mb-1">{m.title}</h2>
-                    <div className={`text-sm font-semibold mb-1 ${m.category === 'AI' ? 'text-yellow-400' : m.category === 'Cloud' ? 'text-blue-400' : m.category === 'IoT' ? 'text-green-400' : 'text-gray-400'}`}>{m.date} • {m.location}</div>
+                <div className="relative mb-6">
+                  <img
+                    src={meetup.image}
+                    alt={meetup.title}
+                    className="w-full h-48 object-cover rounded-xl shadow-lg group-hover:shadow-2xl transition-shadow"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-green-400 text-black text-sm font-semibold rounded-full">
+                      Meetup
+                    </span>
                   </div>
-                  <button onClick={e => { e.stopPropagation(); openRsvp(m); }} className={`inline-block px-6 py-2 rounded-lg font-bold shadow hover:bg-white hover:text-black transition text-base mt-2 md:mt-0 ${m.category === 'AI' ? 'bg-yellow-400 text-black' : m.category === 'Cloud' ? 'bg-blue-400 text-black' : m.category === 'IoT' ? 'bg-green-400 text-black' : 'bg-neutral-700 text-white'}`} type="button">
-                    RSVP
-                  </button>
+                  {meetup.status === 'past' && (
+                    <div className="absolute bottom-4 left-4">
+                      <span className="px-3 py-1 bg-gray-600/80 text-white text-sm font-semibold rounded-full">
+                        Past
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <p className="text-gray-300 text-base">{m.desc}</p>
-              </motion.div>
+                <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {new Date(meetup.date).toLocaleDateString()}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {meetup.time}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    {meetup.location}
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-green-400 transition-colors">
+                  {meetup.title}
+                </h3>
+                <p className="text-gray-300 text-sm mb-4 line-clamp-3">
+                  {meetup.description}
+                </p>
+                <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
+                  <div className="flex items-center gap-1">
+                    <Users className="w-3 h-3" />
+                    {meetup.attendees}
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {meetup.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-1 bg-white/10 rounded-full text-xs text-gray-300 border border-white/20"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                {meetup.rsvp && (
+                  <motion.button
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-400 text-black font-bold rounded-lg hover:bg-white transition-colors text-sm"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    RSVP
+                    <ArrowRight className="w-3 h-3" />
+                  </motion.button>
+                )}
+              </motion.article>
             ))}
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        </div>
       </section>
       {/* RSVP Modal */}
       <AnimatePresence>
@@ -804,4 +828,6 @@ export default function TechMeetupsPage() {
       <Footer />
     </div>
   );
-} 
+};
+
+export default TechMeetupsPage; 

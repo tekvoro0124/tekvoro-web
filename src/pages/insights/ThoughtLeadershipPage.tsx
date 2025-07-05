@@ -1,191 +1,180 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import PageHeader from '../../components/layout/PageHeader';
-import { Calendar, User, ArrowRight, Clock } from 'lucide-react';
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
+import { Calendar, User, ArrowRight, Search } from 'lucide-react';
+
+const articles = [
+  {
+    id: 1,
+    title: 'Leading with Purpose in the Digital Age',
+    summary: 'How visionary leadership is reshaping organizations for a rapidly changing world.',
+    author: 'Michael Rodriguez',
+    date: '2024-12-10',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
+    tags: ['Leadership', 'Strategy'],
+  },
+  {
+    id: 2,
+    title: 'The Ethics of Artificial Intelligence',
+    summary: 'Why responsible AI is essential for building trust and driving innovation.',
+    author: 'Dr. Emily Watson',
+    date: '2024-12-05',
+    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
+    tags: ['AI', 'Ethics'],
+  },
+  {
+    id: 3,
+    title: 'Innovation as a Core Value',
+    summary: 'How to foster a culture of innovation and continuous improvement.',
+    author: 'Lisa Park',
+    date: '2024-12-01',
+    image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80',
+    tags: ['Innovation', 'Culture'],
+  },
+  {
+    id: 4,
+    title: 'The Future of Work: Human + Machine Collaboration',
+    summary: 'Exploring the new frontier of productivity and creativity in the digital workplace.',
+    author: 'James Thompson',
+    date: '2024-11-28',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80',
+    tags: ['Future of Work', 'Collaboration'],
+  },
+];
 
 const ThoughtLeadershipPage = () => {
-  const articles = [
-    {
-      id: 1,
-      title: 'The Future of AI in Business Transformation',
-      excerpt: 'Exploring how artificial intelligence is reshaping industries and creating new opportunities for innovation and growth.',
-      author: 'Musugu Sanjeev',
-      date: '2024-01-15',
-      readTime: '8 min read',
-      category: 'AI & Technology',
-      image: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      featured: true
-    },
-    {
-      id: 2,
-      title: 'Building Scalable Cloud Infrastructure',
-      excerpt: 'Best practices for designing and implementing cloud solutions that grow with your business needs.',
-      author: 'Priya Sharma',
-      date: '2024-01-10',
-      readTime: '6 min read',
-      category: 'Cloud Computing',
-      image: 'https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-    },
-    {
-      id: 3,
-      title: 'The Rise of IoT in Smart Cities',
-      excerpt: 'How Internet of Things technology is transforming urban infrastructure and improving quality of life.',
-      author: 'Rajesh Kumar',
-      date: '2024-01-05',
-      readTime: '7 min read',
-      category: 'IoT',
-      image: 'https://images.pexels.com/photos/3912472/pexels-photo-3912472.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-    },
-    {
-      id: 4,
-      title: 'Cybersecurity in the Digital Age',
-      excerpt: 'Essential strategies for protecting your business from evolving cyber threats and maintaining data security.',
-      author: 'Priya Sharma',
-      date: '2023-12-28',
-      readTime: '9 min read',
-      category: 'Cybersecurity',
-      image: 'https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-    },
-    {
-      id: 5,
-      title: 'User Experience Design Trends for 2024',
-      excerpt: 'Latest trends and best practices in UX design that will shape digital experiences in the coming year.',
-      author: 'Musugu Sanjeev',
-      date: '2023-12-20',
-      readTime: '5 min read',
-      category: 'Design',
-      image: 'https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-    }
-  ];
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const featuredArticle = articles.find(article => article.featured);
-  const regularArticles = articles.filter(article => !article.featured);
+  const filteredArticles = articles.filter(article =>
+    article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    article.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   return (
-    <div className="animate-fade-in">
-      <PageHeader
-        title="Thought Leadership"
-        description="Insights, trends, and expert perspectives on technology, innovation, and digital transformation."
-        bgImage="https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Thought Leadership | Tekvoro Technologies"
+        description="Explore thought leadership content from our experts. Gain insights into industry trends, strategic perspectives, and innovative approaches to technology and business challenges."
+        keywords="thought leadership, expert insights, industry perspectives, strategic thinking, innovation insights, expert opinions, leadership content"
+        ogImage="/images/thought-leadership-og.jpg"
+        ogType="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Thought Leadership",
+          "description": "Explore thought leadership content from our experts",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Tekvoro Technologies Pvt Ltd"
+          }
+        }}
       />
-
-      <section className="section px-4">
+      <Navbar />
+      <section className="relative w-full bg-gradient-to-br from-black via-purple-900 to-black text-white overflow-hidden py-24">
+        <div className="container-custom relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6 bg-gradient-to-r from-white via-purple-400 to-pink-500 bg-clip-text text-transparent">
+              Thought Leadership
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto font-light">
+              Expert opinions, strategic insights, and leadership perspectives from Tekvoro's top minds.
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-2xl mx-auto mb-12"
+          >
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search thought leadership..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/50"
+              />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+      <section className="py-16 bg-black">
         <div className="container-custom">
-          {/* Featured Article */}
-          {featuredArticle && (
-            <div className="mb-16">
-              <h2 className="text-2xl font-bold text-secondary-900 dark:text-white mb-8">Featured Article</h2>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="card overflow-hidden"
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-4xl font-bold text-white mb-12 text-center"
+          >
+            Latest Insights
+          </motion.h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredArticles.map((article, idx) => (
+              <motion.article
+                key={article.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-6 shadow-xl border border-white/10 backdrop-blur-xl hover:scale-105 transition-transform duration-300 group"
               >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-                  <div className="aspect-video lg:aspect-auto">
-                    <img 
-                      src={featuredArticle.image} 
-                      alt={featuredArticle.title}
-                      className="w-full h-full object-cover"
-                    />
+                <div className="relative mb-6">
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-48 object-cover rounded-xl shadow-lg group-hover:shadow-2xl transition-shadow"
+                  />
+                </div>
+                <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {new Date(article.date).toLocaleDateString()}
                   </div>
-                  <div className="p-8 flex flex-col justify-center">
-                    <div className="mb-4">
-                      <span className="bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 px-3 py-1 rounded-full text-sm font-medium">
-                        {featuredArticle.category}
-                      </span>
-                    </div>
-                    <h3 className="text-2xl font-bold text-secondary-900 dark:text-white mb-4">
-                      {featuredArticle.title}
-                    </h3>
-                    <p className="text-gray-700 dark:text-gray-300 mb-6">
-                      {featuredArticle.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center">
-                          <User className="h-4 w-4 mr-1" />
-                          {featuredArticle.author}
-                        </div>
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-1" />
-                          {new Date(featuredArticle.date).toLocaleDateString()}
-                        </div>
-                        <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-1" />
-                          {featuredArticle.readTime}
-                        </div>
-                      </div>
-                      <Link 
-                        to={`/insights/article/${featuredArticle.id}`}
-                        className="text-primary-600 dark:text-primary-400 font-medium hover:underline inline-flex items-center"
-                      >
-                        Read More
-                        <ArrowRight className="ml-1 h-4 w-4" />
-                      </Link>
-                    </div>
+                  <div className="flex items-center gap-1">
+                    <User className="w-3 h-3" />
+                    {article.author}
                   </div>
                 </div>
-              </motion.div>
-            </div>
-          )}
-
-          {/* Regular Articles */}
-          <div>
-            <h2 className="text-2xl font-bold text-secondary-900 dark:text-white mb-8">Latest Articles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {regularArticles.map((article, index) => (
-                <motion.div
-                  key={article.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="card overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                  <div className="aspect-video">
-                    <img 
-                      src={article.image} 
-                      alt={article.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="mb-3">
-                      <span className="bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 px-2 py-1 rounded-full text-xs font-medium">
-                        {article.category}
-                      </span>
-                    </div>
-                    <h3 className="text-xl font-bold text-secondary-900 dark:text-white mb-3">
-                      {article.title}
-                    </h3>
-                    <p className="text-gray-700 dark:text-gray-300 mb-4">
-                      {article.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
-                      <div className="flex items-center">
-                        <User className="h-4 w-4 mr-1" />
-                        {article.author}
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="h-4 w-4 mr-1" />
-                        {article.readTime}
-                      </div>
-                    </div>
-                    <Link 
-                      to={`/insights/article/${article.id}`}
-                      className="text-primary-600 dark:text-primary-400 font-medium hover:underline inline-flex items-center"
+                <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-purple-400 transition-colors">
+                  {article.title}
+                </h3>
+                <p className="text-gray-300 text-sm mb-4 line-clamp-3">
+                  {article.summary}
+                </p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {article.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-1 bg-white/10 rounded-full text-xs text-gray-300 border border-white/20"
                     >
-                      Read More
-                      <ArrowRight className="ml-1 h-4 w-4" />
-                    </Link>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <motion.button
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-purple-400 text-black font-bold rounded-lg hover:bg-white transition-colors text-sm"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Read More
+                  <ArrowRight className="w-3 h-3" />
+                </motion.button>
+              </motion.article>
+            ))}
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };
