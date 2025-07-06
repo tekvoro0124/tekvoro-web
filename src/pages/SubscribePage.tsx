@@ -156,7 +156,11 @@ export default function SubscribePage() {
     setSubmitMessage('');
 
     try {
-      const response = await fetch('/.netlify/functions/subscribe', {
+      const functionUrl = import.meta.env.DEV 
+        ? 'http://localhost:8888/.netlify/functions/subscribe'
+        : 'https://tekvoro.com/.netlify/functions/subscribe';
+      
+      const response = await fetch(functionUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

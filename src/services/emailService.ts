@@ -46,7 +46,8 @@ class EmailService {
   private authToken: string;
 
   constructor() {
-    this.baseUrl = import.meta.env.DEV ? 'http://localhost:8888' : '';
+    // Use the correct domain for production (tekvoro.com instead of www.tekvoro.com)
+    this.baseUrl = import.meta.env.DEV ? 'http://localhost:8888' : 'https://tekvoro.com';
     this.authToken = 'admin-token'; // In production, get from auth context
   }
 
@@ -78,7 +79,7 @@ class EmailService {
   // Send Email
   async sendEmail(emailData: EmailData): Promise<EmailResponse> {
     try {
-      const response = await this.makeRequest('/api/send-email', {
+      const response = await this.makeRequest('/.netlify/functions/send-email', {
         method: 'POST',
         body: JSON.stringify(emailData),
       });
@@ -106,7 +107,7 @@ class EmailService {
       if (filters?.emailType) params.append('emailType', filters.emailType);
       if (filters?.recipientId) params.append('recipientId', filters.recipientId);
 
-      const response = await this.makeRequest(`/api/email-analytics?action=overview&${params.toString()}`);
+      const response = await this.makeRequest(`/.netlify/functions/email-analytics?action=overview&${params.toString()}`);
       return response.data;
     } catch (error) {
       console.error('Failed to get analytics:', error);
@@ -128,7 +129,7 @@ class EmailService {
       if (filters?.dateFrom) params.append('dateFrom', filters.dateFrom);
       if (filters?.dateTo) params.append('dateTo', filters.dateTo);
 
-      const response = await this.makeRequest(`/api/email-analytics?${params.toString()}`);
+      const response = await this.makeRequest(`/.netlify/functions/email-analytics?${params.toString()}`);
       return response.data;
     } catch (error) {
       console.error('Failed to get template analytics:', error);
@@ -139,7 +140,7 @@ class EmailService {
   // Get Templates
   async getTemplates(): Promise<Template[]> {
     try {
-      const response = await this.makeRequest('/api/email-templates');
+      const response = await this.makeRequest('/.netlify/functions/email-templates');
       return response.templates || [];
     } catch (error) {
       console.error('Failed to get templates:', error);
@@ -150,7 +151,7 @@ class EmailService {
   // Create Template
   async createTemplate(name: string, content: string): Promise<boolean> {
     try {
-      const response = await this.makeRequest('/api/email-templates', {
+      const response = await this.makeRequest('/.netlify/functions/email-templates', {
         method: 'POST',
         body: JSON.stringify({
           action: 'create',
@@ -169,7 +170,7 @@ class EmailService {
   // Update Template
   async updateTemplate(name: string, content: string): Promise<boolean> {
     try {
-      const response = await this.makeRequest('/api/email-templates', {
+      const response = await this.makeRequest('/.netlify/functions/email-templates', {
         method: 'POST',
         body: JSON.stringify({
           action: 'update',
@@ -188,7 +189,7 @@ class EmailService {
   // Delete Template
   async deleteTemplate(name: string): Promise<boolean> {
     try {
-      const response = await this.makeRequest('/api/email-templates', {
+      const response = await this.makeRequest('/.netlify/functions/email-templates', {
         method: 'DELETE',
         body: JSON.stringify({ templateName: name }),
       });

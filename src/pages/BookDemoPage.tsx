@@ -131,7 +131,11 @@ const BookDemoPage = () => {
       console.log('Demo booking email sent:', emailResponse);
 
       // Then, submit to the main booking system
-      const response = await fetch('/.netlify/functions/book-demo', {
+      const functionUrl = import.meta.env.DEV 
+        ? 'http://localhost:8888/.netlify/functions/book-demo'
+        : 'https://tekvoro.com/.netlify/functions/book-demo';
+      
+      const response = await fetch(functionUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
