@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Download, RefreshCw, Filter, Calendar, TestTube } from 'lucide-react';
 import EmailDashboard from '../../components/admin/EmailDashboard';
 import EmailTrackingTest from '../../components/admin/EmailTrackingTest';
+import SendGridDomainTest from '../../components/admin/SendGridDomainTest';
 import { supabase } from '../../utils/supabaseClient';
 import SEO from '../../components/SEO';
 
@@ -10,6 +11,7 @@ const EmailAnalyticsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
   const [showTrackingTest, setShowTrackingTest] = useState(false);
+  const [showDomainTest, setShowDomainTest] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,6 +77,13 @@ const EmailAnalyticsPage: React.FC = () => {
               
               <div className="flex items-center space-x-3">
                 <button
+                  onClick={() => setShowDomainTest(!showDomainTest)}
+                  className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  <TestTube className="w-4 h-4 mr-2" />
+                  {showDomainTest ? 'Hide' : 'Show'} Domain Test
+                </button>
+                <button
                   onClick={() => setShowTrackingTest(!showTrackingTest)}
                   className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
@@ -96,6 +105,12 @@ const EmailAnalyticsPage: React.FC = () => {
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {showDomainTest && (
+            <div className="mb-8">
+              <SendGridDomainTest />
+            </div>
+          )}
+          
           {showTrackingTest && (
             <div className="mb-8">
               <EmailTrackingTest />

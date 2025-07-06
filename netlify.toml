@@ -71,6 +71,11 @@
   to = "/.netlify/functions/send-email"
   status = 200
 
+[[redirects]]
+  from = "/api/test-sendgrid-domain"
+  to = "/.netlify/functions/test-sendgrid-domain"
+  status = 200
+
 ## more info on configuring this file: https://ntl.fyi/file-based-build-config
 
 

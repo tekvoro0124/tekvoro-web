@@ -83,12 +83,12 @@ const UpcomingWebinarsPage = () => {
           >
             <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6 bg-gradient-to-r from-white via-blue-400 to-cyan-500 bg-clip-text text-transparent">
               Upcoming Webinars
-            </h1>
+              </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto font-light">
               Join our live webinars to learn from industry experts and stay ahead in tech and business.
             </p>
-          </motion.div>
-          <motion.div
+            </motion.div>
+            <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -104,9 +104,9 @@ const UpcomingWebinarsPage = () => {
                 className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50"
               />
             </div>
-          </motion.div>
-        </div>
-      </section>
+            </motion.div>
+          </div>
+        </section>
       <section className="py-16 bg-black">
         <div className="container-custom">
           <motion.h2

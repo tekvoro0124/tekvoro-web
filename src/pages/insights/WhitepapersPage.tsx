@@ -176,8 +176,8 @@ const WhitepapersPage = () => {
 
           {/* Search and Filter */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex flex-col gap-4 mb-12"
           >
@@ -359,9 +359,9 @@ const WhitepapersPage = () => {
                       {whitepaper.fileSize}
                     </span>
                   </div>
-                </div>
-                
-                <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
+                    </div>
+                      
+                      <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
                     {new Date(whitepaper.date).toLocaleDateString()}
@@ -370,8 +370,8 @@ const WhitepapersPage = () => {
                     <Clock className="w-3 h-3" />
                     {whitepaper.readTime}
                   </div>
-                </div>
-                
+                      </div>
+                      
                 <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-green-400 transition-colors">
                   {whitepaper.title}
                 </h3>
@@ -384,11 +384,11 @@ const WhitepapersPage = () => {
                   <div className="flex items-center gap-1">
                     <Download className="w-3 h-3" />
                     {whitepaper.downloads}
-                  </div>
+                      </div>
                   <div className="flex items-center gap-1">
                     <Eye className="w-3 h-3" />
                     {whitepaper.views}
-                  </div>
+                    </div>
                   <div className="flex items-center gap-1">
                     <FileText className="w-3 h-3" />
                     {whitepaper.pages} pages
