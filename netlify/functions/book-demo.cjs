@@ -29,7 +29,9 @@ exports.handler = async function(event, context) {
     let formData;
     try {
       const body = event.body || '{}';
+      console.log('Raw request body:', body);
       formData = JSON.parse(body);
+      console.log('Parsed form data:', formData);
     } catch (parseError) {
       console.error('Failed to parse request body:', parseError);
       return {
@@ -40,21 +42,25 @@ exports.handler = async function(event, context) {
     }
 
     // Validate required fields
-    const requiredFields = ['name', 'email', 'company', 'solution', 'date', 'time'];
+    const requiredFields = ['name', 'email', 'solution', 'date', 'time'];
     const missingFields = requiredFields.filter(field => !formData[field]);
     
     if (missingFields.length > 0) {
+      console.log('Missing fields:', missingFields);
+      console.log('Received data:', formData);
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({ 
-          error: `Missing required fields: ${missingFields.join(', ')}` 
+          error: `Missing required fields: ${missingFields.join(', ')}`,
+          receivedData: formData
         })
       };
     }
 
     // Check for email service configuration
     const emailService = process.env.EMAIL_SERVICE || 'netlify'; // netlify, sendgrid, or custom
+    console.log('Using email service:', emailService);
     
     if (emailService === 'netlify') {
       // Use Netlify's built-in email service

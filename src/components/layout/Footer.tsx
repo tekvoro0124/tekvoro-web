@@ -18,22 +18,40 @@ const Footer = () => {
     setNewsletterStatus('');
     setNewsletterLoading(true);
     if (!newsletterEmail) return;
-    const { error } = await supabase
-      .from('blog_subscribers')
-      .insert([{ email: newsletterEmail }]);
-    if (error) {
-      if (error.code === '23505' || (error.message && error.message.toLowerCase().includes('duplicate'))) {
-        setNewsletterStatus('You are already subscribed with this email.');
-      } else if (error.message) {
-        setNewsletterStatus('Subscription failed: ' + error.message);
+    
+    try {
+      const functionUrl = import.meta.env.DEV 
+        ? 'http://localhost:8888/.netlify/functions/subscribe'
+        : 'https://tekvoro.com/.netlify/functions/subscribe';
+      
+      const response = await fetch(functionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: newsletterEmail,
+          name: 'Newsletter Subscriber',
+          company: '',
+          interests: [],
+          selectedPlan: 'Free'
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setNewsletterStatus('Subscribed successfully!');
+        setNewsletterEmail('');
       } else {
-        setNewsletterStatus('Subscription failed. Please try again later.');
+        setNewsletterStatus(result.error || 'Subscription failed. Please try again later.');
       }
-    } else {
-      setNewsletterStatus('Subscribed successfully!');
-      setNewsletterEmail('');
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      setNewsletterStatus('Subscription failed. Please try again later.');
+    } finally {
+      setNewsletterLoading(false);
     }
-    setNewsletterLoading(false);
   }
 
   return (

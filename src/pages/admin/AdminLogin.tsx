@@ -57,12 +57,12 @@ export default function AdminLogin() {
             className="w-full px-5 py-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400/50 transition-colors"
             required
           />
-          {error && <div className="text-red-400 text-sm text-center">{error}</div>}
-          <div className="text-yellow-400 text-sm text-center bg-yellow-400/10 p-3 rounded-lg border border-yellow-400/20">
-            <strong>Demo Credentials:</strong><br />
-            Email: admin@tekvoro.com<br />
-            Password: demo123
-          </div>
+                  {error && <div className="text-red-400 text-sm text-center">{error}</div>}
+        <div className="text-blue-400 text-sm text-center bg-blue-400/10 p-3 rounded-lg border border-blue-400/20">
+          <strong>Secure Admin Login:</strong><br />
+          Use your configured admin credentials<br />
+          Contact system administrator for access
+        </div>
           <button
             type="submit"
             className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-bold shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-60"

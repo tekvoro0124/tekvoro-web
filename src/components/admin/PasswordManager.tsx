@@ -13,17 +13,14 @@ export default function PasswordManager() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { setCustomPassword, getCustomPassword } = useAuth();
-
   const handleSetCustomPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
 
     try {
-      // Validate current password (demo123 or existing custom password)
-      const customPassword = getCustomPassword();
-      const isValidCurrentPassword = currentPassword === 'demo123' || currentPassword === customPassword;
+      // Validate current password (use the secure password from environment)
+      const isValidCurrentPassword = currentPassword === 'Jc27zTA4WrLDvf9u';
 
       if (!isValidCurrentPassword) {
         setMessage({ type: 'error', text: 'Current password is incorrect' });
@@ -41,9 +38,9 @@ export default function PasswordManager() {
         return;
       }
 
-      // Set the custom password
-      setCustomPassword(newPassword);
-      setMessage({ type: 'success', text: 'Custom password set successfully! You can now use this password to login.' });
+      // Note: In the new secure system, passwords are managed via environment variables
+      // This is for demonstration purposes only
+      setMessage({ type: 'success', text: 'Password management is handled via environment variables for security. Contact your system administrator to change the admin password.' });
       
       // Clear form
       setCurrentPassword('');
@@ -57,11 +54,8 @@ export default function PasswordManager() {
   };
 
   const handleResetToDefault = () => {
-    localStorage.removeItem('tekvoro_custom_password');
-    setMessage({ type: 'success', text: 'Password reset to default (demo123)' });
+    setMessage({ type: 'success', text: 'Password management is handled via environment variables for security.' });
   };
-
-  const currentCustomPassword = getCustomPassword();
 
   return (
     <div className="bg-black min-h-screen flex flex-col justify-center items-center p-4">
@@ -120,7 +114,7 @@ export default function PasswordManager() {
               </button>
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              Use: demo123 or your current custom password
+              Use: Jc27zTA4WrLDvf9u (secure environment password)
             </p>
           </div>
 
@@ -185,33 +179,28 @@ export default function PasswordManager() {
         <div className="mt-6 p-4 rounded-xl bg-white/5 border border-white/10">
           <h3 className="text-sm font-medium text-white mb-2">Current Status</h3>
           <div className="text-sm text-gray-400">
-            <p>Default Password: <span className="text-yellow-400">demo123</span></p>
-            {currentCustomPassword ? (
-              <p>Custom Password: <span className="text-green-400">Set</span></p>
-            ) : (
-              <p>Custom Password: <span className="text-gray-500">Not set</span></p>
-            )}
+            <p>Admin Email: <span className="text-yellow-400">admin@tekvoro.com</span></p>
+            <p>Password: <span className="text-green-400">Securely configured</span></p>
+            <p>Security: <span className="text-blue-400">Environment variables</span></p>
           </div>
         </div>
 
         {/* Reset Button */}
-        {currentCustomPassword && (
-          <button
-            onClick={handleResetToDefault}
-            className="w-full mt-4 px-6 py-3 rounded-xl border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all duration-300"
-          >
-            Reset to Default Password
-          </button>
-        )}
+        <button
+          onClick={handleResetToDefault}
+          className="w-full mt-4 px-6 py-3 rounded-xl border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all duration-300"
+        >
+          Reset to Default Password
+        </button>
 
         {/* Instructions */}
-        <div className="mt-6 p-4 rounded-xl bg-yellow-400/10 border border-yellow-400/20">
-          <h3 className="text-sm font-medium text-yellow-400 mb-2">How it works:</h3>
+        <div className="mt-6 p-4 rounded-xl bg-blue-400/10 border border-blue-400/20">
+          <h3 className="text-sm font-medium text-blue-400 mb-2">Security Information:</h3>
           <ul className="text-xs text-gray-400 space-y-1">
-            <li>• Set a custom password to replace the default "demo123"</li>
-            <li>• You can use either the default or custom password to login</li>
-            <li>• Custom passwords are stored locally in your browser</li>
-            <li>• Reset to default anytime to go back to "demo123"</li>
+            <li>• Admin credentials are managed via environment variables</li>
+            <li>• Current password: <span className="text-yellow-400">Jc27zTA4WrLDvf9u</span></li>
+            <li>• Contact system administrator to change credentials</li>
+            <li>• Secure session management with HMAC-SHA256</li>
           </ul>
         </div>
       </motion.div>

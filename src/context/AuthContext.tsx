@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 
 interface User {
   id: string;
-  username: string;
+  email: string;
   role: string;
 }
 
@@ -10,58 +10,45 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  setCustomPassword: (password: string) => void;
-  getCustomPassword: () => string | null;
+  validateSession: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// For demo purposes only - in a real app, this would be authenticated against a backend
-const MOCK_ADMIN = {
-  id: '1',
-  username: 'admin@tekvoro.com',
-  password: 'demo123',
-  role: 'admin'
-};
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Custom password management
-  const setCustomPassword = (password: string) => {
-    localStorage.setItem('tekvoro_custom_password', password);
-    console.log('Custom password set successfully');
-  };
-
-  const getCustomPassword = (): string | null => {
-    return localStorage.getItem('tekvoro_custom_password');
+  // Get the base URL for API calls
+  const getBaseUrl = () => {
+    return import.meta.env.DEV ? 'http://localhost:8888' : 'https://tekvoro.com';
   };
 
   useEffect(() => {
-    // Check for saved auth state on mount
-    const initializeAuth = () => {
+    // Check for saved session on mount
+    const initializeAuth = async () => {
       try {
+        const sessionToken = localStorage.getItem('tekvoro_session_token');
+        const sessionHash = localStorage.getItem('tekvoro_session_hash');
         const savedUser = localStorage.getItem('tekvoro_user');
-        console.log('AuthContext - Saved user from localStorage:', savedUser);
         
-        if (savedUser) {
-          const parsedUser = JSON.parse(savedUser);
-          console.log('AuthContext - Parsed user:', parsedUser);
-          
-          // Validate the user data
-          if (parsedUser && parsedUser.id && parsedUser.username && parsedUser.role) {
-            setUser(parsedUser);
-            console.log('AuthContext - User restored from localStorage');
-          } else {
-            console.log('AuthContext - Invalid user data, clearing localStorage');
+        if (sessionToken && sessionHash && savedUser) {
+          // Validate session with server
+          const isValid = await validateSession();
+          if (!isValid) {
+            // Clear invalid session
+            localStorage.removeItem('tekvoro_session_token');
+            localStorage.removeItem('tekvoro_session_hash');
             localStorage.removeItem('tekvoro_user');
           }
         }
       } catch (error) {
-        console.error('AuthContext - Failed to parse saved user:', error);
+        console.error('AuthContext - Failed to initialize auth:', error);
+        // Clear any corrupted data
+        localStorage.removeItem('tekvoro_session_token');
+        localStorage.removeItem('tekvoro_session_hash');
         localStorage.removeItem('tekvoro_user');
       } finally {
         setIsLoading(false);
@@ -71,28 +58,32 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     initializeAuth();
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
-    console.log('AuthContext - Login attempt:', { username, password });
+  const login = async (email: string, password: string): Promise<boolean> => {
+    console.log('AuthContext - Login attempt:', { email });
     
     try {
-      // Check for custom password first
-      const customPassword = getCustomPassword();
-      
-      // In a real app, this would call your authentication API
-      if (username === MOCK_ADMIN.username && 
-          (password === MOCK_ADMIN.password || (customPassword && password === customPassword))) {
-        const userData = {
-          id: MOCK_ADMIN.id,
-          username: MOCK_ADMIN.username,
-          role: MOCK_ADMIN.role
-        };
+      const response = await fetch(`${getBaseUrl()}/.netlify/functions/admin-auth`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        console.log('AuthContext - Login successful');
         
-        console.log('AuthContext - Login successful, setting user:', userData);
-        setUser(userData);
-        localStorage.setItem('tekvoro_user', JSON.stringify(userData));
+        // Store session data
+        localStorage.setItem('tekvoro_session_token', data.sessionToken);
+        localStorage.setItem('tekvoro_session_hash', data.sessionHash);
+        localStorage.setItem('tekvoro_user', JSON.stringify(data.user));
+        
+        setUser(data.user);
         return true;
       } else {
-        console.log('AuthContext - Login failed: Invalid credentials');
+        console.log('AuthContext - Login failed:', data.error);
         return false;
       }
     } catch (error) {
@@ -104,7 +95,40 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     console.log('AuthContext - Logging out');
     setUser(null);
+    localStorage.removeItem('tekvoro_session_token');
+    localStorage.removeItem('tekvoro_session_hash');
     localStorage.removeItem('tekvoro_user');
+  };
+
+  const validateSession = async (): Promise<boolean> => {
+    try {
+      const sessionToken = localStorage.getItem('tekvoro_session_token');
+      const sessionHash = localStorage.getItem('tekvoro_session_hash');
+      
+      if (!sessionToken || !sessionHash) {
+        return false;
+      }
+
+      const response = await fetch(`${getBaseUrl()}/.netlify/functions/validate-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sessionToken, sessionHash }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setUser(data.user);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error('AuthContext - Session validation error:', error);
+      return false;
+    }
   };
 
   console.log('AuthContext - Current state:', {
@@ -121,8 +145,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         login,
         logout,
-        setCustomPassword,
-        getCustomPassword
+        validateSession
       }}
     >
       {children}
