@@ -5,9 +5,10 @@ const EmailAnalytics = require('./analytics.cjs');
 class EmailTemplateManager {
     constructor() {
         this.templates = new Map();
-        this.templatesDir = path.join(__dirname, 'templates');
+        // Use process.cwd() for Netlify functions compatibility
+        this.templatesDir = path.join(process.cwd(), 'emails', 'templates');
         this.analytics = new EmailAnalytics();
-        this.customTemplatesDir = path.join(__dirname, 'custom-templates');
+        this.customTemplatesDir = path.join(process.cwd(), 'emails', 'custom-templates');
     }
 
     async loadTemplates() {
