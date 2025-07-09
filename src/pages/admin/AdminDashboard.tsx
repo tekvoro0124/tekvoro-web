@@ -4,8 +4,8 @@ import SEO from '../../components/SEO';
 import { motion } from 'framer-motion';
 import { Mail, Users, BarChart3, FileText, Settings, Shield, LogOut, Edit, Image, MessageSquare, Award, TrendingUp, Eye, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { supabase } from '../../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const adminSections = [
   {
@@ -111,26 +111,18 @@ const adminSections = [
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate('/admin/login');
-      } else {
-        setLoading(false);
-      }
-    });
-    // Listen for logout/login in other tabs
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) navigate('/admin/login');
-    });
-    return () => {
-      listener?.subscription.unsubscribe();
-    };
-  }, [navigate]);
+    if (!isAuthenticated) {
+      navigate('/admin/login');
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await logout();
     navigate('/admin/login');
   };
 

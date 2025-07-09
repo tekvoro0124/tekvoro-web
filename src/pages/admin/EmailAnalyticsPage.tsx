@@ -4,39 +4,23 @@ import { ArrowLeft, Download, RefreshCw, Filter, Calendar, TestTube } from 'luci
 import EmailDashboard from '../../components/admin/EmailDashboard';
 import EmailTrackingTest from '../../components/admin/EmailTrackingTest';
 import SendGridDomainTest from '../../components/admin/SendGridDomainTest';
-import { supabase } from '../../utils/supabaseClient';
 import SEO from '../../components/SEO';
+import { useAuth } from '../../context/AuthContext';
 
 const EmailAnalyticsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
   const [showTrackingTest, setShowTrackingTest] = useState(false);
   const [showDomainTest, setShowDomainTest] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    // Check authentication
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/admin/login');
-        return;
-      }
-      setAuthenticated(true);
+    if (!isAuthenticated) {
+      navigate('/admin/login');
+    } else {
       setLoading(false);
-    };
-
-    checkAuth();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        navigate('/admin/login');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    }
+  }, [isAuthenticated, navigate]);
 
   if (loading) {
     return (
@@ -46,7 +30,7 @@ const EmailAnalyticsPage: React.FC = () => {
     );
   }
 
-  if (!authenticated) {
+  if (!isAuthenticated) {
     return null;
   }
 

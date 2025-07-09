@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Edit, Trash2, Eye, Mail, Download, Upload } from 'lucide-react';
 import EmailTemplateEditor from '../../components/admin/EmailTemplateEditor';
-import { supabase } from '../../utils/supabaseClient';
 import SEO from '../../components/SEO';
+import { useAuth } from '../../context/AuthContext';
 
 interface Template {
   name: string;
@@ -15,35 +15,19 @@ interface Template {
 const EmailTemplatesPage: React.FC = () => {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    // Check authentication
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/admin/login');
-        return;
-      }
-      setAuthenticated(true);
+    if (!isAuthenticated) {
+      navigate('/admin/login');
+    } else {
       loadTemplates();
-    };
-
-    checkAuth();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        navigate('/admin/login');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    }
+  }, [isAuthenticated, navigate]);
 
   const loadTemplates = async () => {
     try {
@@ -135,7 +119,7 @@ const EmailTemplatesPage: React.FC = () => {
     );
   }
 
-  if (!authenticated) {
+  if (!isAuthenticated) {
     return null;
   }
 

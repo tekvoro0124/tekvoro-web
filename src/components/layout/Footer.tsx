@@ -165,7 +165,7 @@ const Footer = () => {
                     <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-300" />
                     {link.label}
                     {link.label.includes('Admin') && (
-                      <span className="block text-xs text-yellow-300 mt-1 ml-6 bg-white/5 px-2 py-1 rounded-md border border-yellow-400/20 w-fit">Demo: admin@tekvoro.com / password: demo123</span>
+                      <span className="block text-xs text-blue-300 mt-1 ml-6 bg-white/5 px-2 py-1 rounded-md border border-blue-400/20 w-fit">Secure admin access - contact administrator</span>
                     )}
                   </Link>
                 </motion.li>

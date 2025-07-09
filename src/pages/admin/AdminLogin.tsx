@@ -27,7 +27,7 @@ export default function AdminLogin() {
       navigate('/admin');
     } else {
       console.log('AdminLogin - Login failed');
-      setError('Invalid email or password. Use: admin@tekvoro.com / demo123');
+      setError('Invalid email or password. Please check your credentials.');
     }
   };
 
