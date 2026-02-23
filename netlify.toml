@@ -4,6 +4,9 @@
   functions = "netlify/functions"
   publish = "dist"
 
+  [build.environment]
+    NODE_ENV = "development"
+
   ## (optional) Settings for Netlify Dev
   ## https://github.com/netlify/cli/blob/main/docs/netlify-dev.md#project-detection
   [dev]
