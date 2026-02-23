@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Demo Booking - Tekvoro</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .booking-details {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            color: white;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            opacity: 0.9;
+        }
+        .detail-value {
+            font-weight: 500;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        .footer {
+            background-color: #1e293b;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            margin: 5px 0;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+        .tracking-pixel {
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+            }
+            .header, .content, .footer {
+                padding: 20px;
+            }
+            .detail-row {
+                flex-direction: column;
+            }
+            .detail-value {
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Email Tracking Pixel -->
+    <img src="{{tracking_url}}" alt="" class="tracking-pixel" />
+    
+    <div class="container">
+        <div class="header">
+            <h1>🎯 New Demo Booking</h1>
+            <p>Tekvoro Technologies</p>
+        </div>
+        
+        <div class="content">
+            <h2 style="color: #1e293b; margin-bottom: 20px;">Hello Team!</h2>
+            
+            <p style="font-size: 16px; line-height: 1.6; color: #475569;">
+                We have received a new demo booking request. Please review the details below and follow up with the prospect.
+            </p>
+            
+            <div class="booking-details">
+                <h3 style="margin: 0 0 20px 0; font-size: 20px;">📋 Booking Details</h3>
+                
+                <div class="detail-row">
+                    <span class="detail-label">👤 Name:</span>
+                    <span class="detail-value">{{name}}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">📧 Email:</span>
+                    <span class="detail-value">{{email}}</span>
+                </div>
+                
+                {{#if company}}
+                <div class="detail-row">
+                    <span class="detail-label">🏢 Company:</span>
+                    <span class="detail-value">{{company}}</span>
+                </div>
+                {{/if}}
+                
+                {{#if phone}}
+                <div class="detail-row">
+                    <span class="detail-label">📞 Phone:</span>
+                    <span class="detail-value">{{phone}}</span>
+                </div>
+                {{/if}}
+                
+                {{#if solution}}
+                <div class="detail-row">
+                    <span class="detail-label">🎯 Solution:</span>
+                    <span class="detail-value">{{solution}}</span>
+                </div>
+                {{/if}}
+                
+                {{#if date}}
+                <div class="detail-row">
+                    <span class="detail-label">📅 Preferred Date:</span>
+                    <span class="detail-value">{{date}}</span>
+                </div>
+                {{/if}}
+                
+                {{#if time}}
+                <div class="detail-row">
+                    <span class="detail-label">⏰ Preferred Time:</span>
+                    <span class="detail-value">{{time}}</span>
+                </div>
+                {{/if}}
+                
+                {{#if message}}
+                <div class="detail-row">
+                    <span class="detail-label">💬 Message:</span>
+                    <span class="detail-value">{{message}}</span>
+                </div>
+                {{/if}}
+            </div>
+            
+            <div class="cta-section">
+                <a href="mailto:{{email}}?subject=Re: Demo Booking Request - Tekvoro" class="cta-button">
+                    📧 Reply to Prospect
+                </a>
+            </div>
+            
+            <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px; margin-top: 30px;">
+                <h4 style="margin: 0 0 10px 0; color: #1e293b;">📊 Quick Actions</h4>
+                <ul style="margin: 0; padding-left: 20px; color: #475569;">
+                    <li>Schedule a follow-up call within 24 hours</li>
+                    <li>Prepare a customized demo based on their requirements</li>
+                    <li>Add to CRM for tracking</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Tekvoro Technologies</strong></p>
+            <p>Transforming businesses through innovative technology solutions</p>
+            <div class="social-links">
+                <a href="https://www.tekvoro.com">🌐 Website</a>
+                <a href="https://linkedin.com/company/tekvoro">💼 LinkedIn</a>
+                <a href="https://twitter.com/tekvoro">🐦 Twitter</a>
+            </div>
+            <p style="margin-top: 20px; font-size: 12px; opacity: 0.6;">
+                This email was sent from your Tekvoro website contact form.<br>
+                Message ID: {{message_id}} | Sent: {{timestamp}}
+            </p>
+        </div>
+    </div>
+</body>
+</html> 
