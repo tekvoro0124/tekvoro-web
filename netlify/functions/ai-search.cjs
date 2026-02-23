@@ -294,13 +294,16 @@ exports.handler = async function(event, context) {
         body: JSON.stringify({ 
           answer, 
           suggestions,
-          localResults: localResults.map(item => ({
-            title: item.title,
-            description: item.description,
-            url: item.url,
-            category: item.category
-          }))
-        });
+          localResults: localResults.map(function(item) {
+            return {
+              title: item.title,
+              description: item.description,
+              url: item.url,
+              category: item.category
+            };
+          })
+        })
+      };
 
     } catch (fetchError) {
       clearTimeout(timeoutId);
