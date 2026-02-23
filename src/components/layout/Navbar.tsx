@@ -189,6 +189,8 @@ export default function Navbar() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [localResults, setLocalResults] = useState<Array<{title: string, description: string, url: string, category: string}>>([]);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const [listening, setListening] = useState(false);
 
   // Accessibility: focus trap and ESC key
   useEffect(() => {
