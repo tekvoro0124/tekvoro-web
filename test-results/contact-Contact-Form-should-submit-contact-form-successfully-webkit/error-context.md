@@ -1,0 +1,234 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - link "Tekvoro Home" [ref=e5]:
+      - /url: /
+      - img [ref=e6]:
+        - img [ref=e7]
+    - generic [ref=e25]:
+      - button "Open search" [ref=e26] [cursor=pointer]:
+        - img [ref=e27]
+      - button "Open menu" [ref=e30] [cursor=pointer]
+  - generic [ref=e37]:
+    - heading "Get In Touch" [level=1] [ref=e38]:
+      - text: Get In
+      - text: Touch
+    - paragraph [ref=e39]: Ready to transform your business? Let's discuss your project and explore how we can help.
+  - generic [ref=e42]:
+    - generic [ref=e43]:
+      - heading "Contact Information" [level=2] [ref=e44]
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - img [ref=e48]
+          - generic [ref=e51]:
+            - heading "Address" [level=3] [ref=e52]
+            - paragraph [ref=e53]: 5-24-190, NTR Nagar, Gajularamaram, Hyderabad, Telangana – 500055
+        - generic [ref=e54]:
+          - img [ref=e56]
+          - generic [ref=e58]:
+            - heading "Phone" [level=3] [ref=e59]
+            - paragraph [ref=e60]: +91 9121331813
+        - generic [ref=e61]:
+          - img [ref=e63]
+          - generic [ref=e66]:
+            - heading "Email" [level=3] [ref=e67]
+            - paragraph [ref=e68]: tekvoro@gmail.com
+    - generic [ref=e70]:
+      - heading "Send us a Message" [level=2] [ref=e71]
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - textbox "First Name" [ref=e74]: Test
+          - textbox "Last Name" [ref=e75]: User
+        - textbox "Business Email" [ref=e76]: test@example.com
+        - generic [ref=e77]:
+          - textbox "Company Name" [ref=e78]: Test Company
+          - textbox "Phone Number" [ref=e79]: "1234567890"
+        - generic [ref=e80]:
+          - combobox [ref=e81]:
+            - option "Select Project Type"
+            - option "AI Marketplace Platform" [selected]
+            - option "AI Integration / Bot"
+            - option "Admin Dashboard"
+            - option "White-Label Platform"
+            - option "Mobile App"
+            - option "Other"
+          - combobox [ref=e82]:
+            - option "Select Budget Range"
+            - option "Under ₹3L"
+            - option "₹3L - ₹8L"
+            - option "₹8L - ₹20L" [selected]
+            - option "₹20L+"
+            - option "International ($10K+)"
+        - generic [ref=e83]:
+          - combobox [ref=e84]:
+            - option "Select Timeline"
+            - option "ASAP (< 1 month)"
+            - option "1-3 months" [selected]
+            - option "3-6 months"
+            - option "Flexible"
+          - combobox [ref=e85]:
+            - option "How did you find us?"
+            - option "Google" [selected]
+            - option "LinkedIn"
+            - option "Clutch"
+            - option "Referral"
+            - option "Other"
+        - textbox "Describe your project in detail..." [ref=e86]: Test project description with more than 20 characters for validation
+        - textbox "Additional information or questions..." [active] [ref=e87]: Test message with more than 10 characters
+        - button "Send Message" [ref=e88] [cursor=pointer]:
+          - generic [ref=e89]:
+            - text: Send Message
+            - img [ref=e90]
+  - contentinfo [ref=e93]:
+    - generic [ref=e97]:
+      - generic [ref=e98]:
+        - generic [ref=e99]:
+          - link "Tekvoro Home" [ref=e101]:
+            - /url: /
+            - img [ref=e102]:
+              - img [ref=e103]
+          - paragraph [ref=e121]: Leading IT solutions in Hyderabad, delivering pure innovation for a digital future.
+          - generic [ref=e122]:
+            - generic [ref=e123]:
+              - img [ref=e125]
+              - generic [ref=e128]: 5-24-190, NTR Nagar, Gajularamaram, Hyderabad, Telangana – 500055
+            - generic [ref=e129]:
+              - img [ref=e131]
+              - link "info@tekvoro.com" [ref=e134]:
+                - /url: mailto:info@tekvoro.com
+            - generic [ref=e135]:
+              - img [ref=e137]
+              - link "+91 9121331813" [ref=e139]:
+                - /url: tel:+919121331813
+        - generic [ref=e140]:
+          - heading "Company" [level=3] [ref=e141]:
+            - img [ref=e142]
+            - text: Company
+          - list [ref=e144]:
+            - listitem [ref=e145]:
+              - link "About Us" [ref=e146]:
+                - /url: /about
+                - img [ref=e147]
+                - text: About Us
+            - listitem [ref=e149]:
+              - link "Leadership" [ref=e150]:
+                - /url: /about/leadership
+                - img [ref=e151]
+                - text: Leadership
+            - listitem [ref=e153]:
+              - link "Culture" [ref=e154]:
+                - /url: /about/culture
+                - img [ref=e155]
+                - text: Culture
+            - listitem [ref=e157]:
+              - link "Careers" [ref=e158]:
+                - /url: /careers
+                - img [ref=e159]
+                - text: Careers
+            - listitem [ref=e161]:
+              - link "Contact" [ref=e162]:
+                - /url: /contact
+                - img [ref=e163]
+                - text: Contact
+            - listitem [ref=e165]:
+              - link "Admin (Demo Login) Secure admin access - contact administrator" [ref=e166]:
+                - /url: /admin/login
+                - img [ref=e167]
+                - text: Admin (Demo Login)
+                - generic [ref=e169]: Secure admin access - contact administrator
+        - generic [ref=e170]:
+          - heading "Services" [level=3] [ref=e171]:
+            - img [ref=e172]
+            - text: Services
+          - list [ref=e174]:
+            - listitem [ref=e175]:
+              - img [ref=e176]
+              - link "AI Solutions" [ref=e178]:
+                - /url: /industries/ai-ml
+            - listitem [ref=e179]:
+              - img [ref=e180]
+              - link "Web Development" [ref=e182]:
+                - /url: /services/web-development
+            - listitem [ref=e183]:
+              - img [ref=e184]
+              - link "Mobile Apps" [ref=e186]:
+                - /url: /services/mobile-apps
+            - listitem [ref=e187]:
+              - img [ref=e188]
+              - link "Cloud Services" [ref=e190]:
+                - /url: /services/cloud-solutions
+            - listitem [ref=e191]:
+              - img [ref=e192]
+              - link "UI/UX Design" [ref=e194]:
+                - /url: /services/ui-ux-design
+        - generic [ref=e195]:
+          - heading "Resources" [level=3] [ref=e196]:
+            - img [ref=e197]
+            - text: Resources
+          - list [ref=e199]:
+            - listitem [ref=e200]:
+              - img [ref=e201]
+              - link "Blog & Insights" [ref=e203]:
+                - /url: /blog
+            - listitem [ref=e204]:
+              - img [ref=e205]
+              - link "Case Studies" [ref=e207]:
+                - /url: /insights/case-studies
+            - listitem [ref=e208]:
+              - img [ref=e209]
+              - link "Whitepapers" [ref=e211]:
+                - /url: /insights/whitepapers
+            - listitem [ref=e212]:
+              - img [ref=e213]
+              - link "Events" [ref=e215]:
+                - /url: /insights/events
+            - listitem [ref=e216]:
+              - img [ref=e217]
+              - link "Client Portal" [ref=e219]:
+                - /url: /client-portal
+            - listitem [ref=e220]:
+              - img [ref=e221]
+              - link "Support Center" [ref=e223]:
+                - /url: /support-center
+            - listitem [ref=e224]:
+              - img [ref=e225]
+              - link "Newsletter" [ref=e227]:
+                - /url: /subscribe
+            - listitem [ref=e228]:
+              - img [ref=e229]
+              - link "Marketing Campaigns Internal" [ref=e231]:
+                - /url: /marketing
+                - text: Marketing Campaigns
+                - generic [ref=e232]: Internal
+      - generic [ref=e233]:
+        - generic [ref=e234]:
+          - heading "Stay Updated" [level=3] [ref=e235]
+          - paragraph [ref=e236]: Subscribe to our newsletter for the latest insights and updates.
+          - generic [ref=e237]:
+            - textbox "Your email address" [ref=e238]
+            - button "Subscribe" [ref=e239] [cursor=pointer]
+        - generic [ref=e240]:
+          - generic [ref=e241]: Follow us for more updates
+          - generic [ref=e242]:
+            - link "Facebook" [ref=e243]:
+              - /url: "#"
+              - img [ref=e244]
+            - link "Twitter" [ref=e246]:
+              - /url: "#"
+              - img [ref=e247]
+            - link "Instagram" [ref=e249]:
+              - /url: "#"
+              - img [ref=e250]
+            - link "LinkedIn" [ref=e253]:
+              - /url: "#"
+              - img [ref=e254]
+            - link "YouTube" [ref=e258]:
+              - /url: "#"
+              - img [ref=e259]
+            - link "Website" [ref=e262]:
+              - /url: "#"
+              - img [ref=e263]
+      - paragraph [ref=e267]: © 2026 Tekvoro Technologies. All rights reserved.
+```
