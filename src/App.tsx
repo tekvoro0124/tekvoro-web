@@ -81,6 +81,10 @@ const CampaignsIndexPage = lazy(() => import('./pages/marketing/campaigns-index'
 const EmailAnalyticsPage = lazy(() => import('./pages/admin/EmailAnalyticsPage'));
 const EmailTemplatesPage = lazy(() => import('./pages/admin/EmailTemplatesPage'));
 const EmailCampaignsPage = lazy(() => import('./pages/admin/EmailCampaignsPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
+const PasswordResetPage = lazy(() => import('./pages/PasswordResetPage'));
+const UnsubscribePage = lazy(() => import('./pages/UnsubscribePage'));
 const NotFoundPage = () => (
   <div className="min-h-screen flex items-center justify-center text-2xl font-bold text-red-600">Page Not Found</div>
 );
@@ -197,6 +201,10 @@ function App() {
               <AiCampaignInsightsPage />
             </ProtectedRoute>
           } />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/password-reset" element={<PasswordResetPage />} />
+          <Route path="/unsubscribe" element={<UnsubscribePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         </Suspense>
