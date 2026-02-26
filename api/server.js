@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -12,6 +13,9 @@ const authRoutes = require('./routes/auth');
 const contentRoutes = require('./routes/content');
 const contactRoutes = require('./routes/contact');
 const subscriptionRoutes = require('./routes/subscription');
+const analyticsRoutes = require('./routes/analytics');
+const ticketsRoutes = require('./routes/tickets');
+const eventsRoutes = require('./routes/events');
 const adminRoutes = require('./routes/admin');
 
 // Initialize Express app
@@ -67,6 +71,11 @@ app.use(compression());
 // Logging middleware
 app.use(morgan('combined'));
 
+// Serve static files from frontend build in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../dist')));
+}
+
 // Database connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tekvoro', {
   useNewUrlParser: true,
@@ -87,6 +96,9 @@ app.use('/api/portal', require('./routes/clientPortal'));
 app.use('/api/content', contentRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/subscription', subscriptionRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/tickets', ticketsRoutes);
+app.use('/api/events', eventsRoutes);
 app.use('/api/admin', adminRoutes);
 
 // Health check endpoint
@@ -123,13 +135,20 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({
-    error: 'Not Found',
-    message: `Route ${req.originalUrl} not found`
+// SPA fallback - serve index.html for non-API routes in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
   });
-});
+} else {
+  // 404 handler for development
+  app.use('*', (req, res) => {
+    res.status(404).json({
+      error: 'Not Found',
+      message: `Route ${req.originalUrl} not found`
+    });
+  });
+}
 
 // Start server
 const PORT = process.env.PORT || 5002;
