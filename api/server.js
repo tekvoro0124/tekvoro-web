@@ -71,17 +71,52 @@ app.use(compression());
 // Logging middleware
 app.use(morgan('combined'));
 
-// Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tekvoro', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log('🚀 Connected to MongoDB');
-})
-.catch((err) => {
-  console.error('❌ MongoDB connection error:', err);
-  process.exit(1);
+// Database connection with graceful degradation
+let dbConnected = false;
+let lastDbError = null;
+
+const connectMongoDB = () => {
+  mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tekvoro', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+    connectTimeoutMS: 5000,
+  })
+  .then(() => {
+    dbConnected = true;
+    lastDbError = null;
+    console.log('✅ Connected to MongoDB');
+  })
+  .catch((err) => {
+    dbConnected = false;
+    lastDbError = err.message;
+    console.error('❌ MongoDB connection error:', err.message);
+    console.log('⏳ Retrying in 10 seconds...');
+    // Retry connection every 10 seconds instead of crashing
+    setTimeout(connectMongoDB, 10000);
+  });
+};
+
+// Initial connection attempt
+connectMongoDB();
+
+// Middleware to check database status for API requests
+app.use('/api', (req, res, next) => {
+  // Health check and analytics can work without DB
+  if (req.path === '/health' || req.path === '/analytics/track') {
+    return next();
+  }
+  
+  // For other API routes, warn if DB not connected
+  if (!dbConnected) {
+    return res.status(503).json({
+      error: 'Service Temporarily Unavailable',
+      message: 'Database connection establishing. Please try again in a moment.',
+      timestamp: new Date().toISOString()
+    });
+  }
+  
+  next();
 });
 
 // Routes - MUST come before static file serving
@@ -102,7 +137,14 @@ app.get('/api/health', (req, res) => {
     status: 'OK',
     timestamp: new Date().toISOString(),
     service: 'Tekvoro API',
-    version: '1.0.0'
+    version: '1.0.0',
+    database: {
+      connected: dbConnected,
+      status: dbConnected ? 'Connected' : 'Connecting',
+      lastError: lastDbError || null,
+      retryTime: dbConnected ? null : 'Every 10 seconds'
+    },
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
