@@ -1,5 +1,6 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
+const sgMail = require('@sendgrid/mail');
 const emailService = require('../services/emailService');
 const { EmailSubscription, EmailCampaign } = require('../models');
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
