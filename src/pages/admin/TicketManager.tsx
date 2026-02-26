@@ -1,16 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Edit2, Trash2, AlertCircle, CheckCircle, Clock, X } from 'lucide-react';
+import { Trash2, AlertCircle, CheckCircle, Clock, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+
+interface Ticket {
+  _id: string;
+  title: string;
+  description: string;
+  email: string;
+  priority: string;
+  category: string;
+  status: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 export default function TicketManager() {
   const { isAdmin } = useAuth();
-  const navigate = useNavigate();
-  const [tickets, setTickets] = useState([]);
+  const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [filterStatus, setFilterStatus] = useState('open');
   const [filterCategory, setFilterCategory] = useState('');
 
@@ -48,7 +58,7 @@ export default function TicketManager() {
     }
   };
 
-  const updateTicketStatus = async (ticketId, newStatus) => {
+  const updateTicketStatus = async (ticketId: string, newStatus: string) => {
     try {
       const token = localStorage.getItem('tekvoro_auth_token');
       const response = await fetch(`/api/tickets/${ticketId}`, {
@@ -71,7 +81,7 @@ export default function TicketManager() {
     }
   };
 
-  const deleteTicket = async (ticketId) => {
+  const deleteTicket = async (ticketId: string) => {
     if (!window.confirm('Are you sure you want to delete this ticket?')) return;
 
     try {
@@ -94,8 +104,8 @@ export default function TicketManager() {
     }
   };
 
-  const getPriorityColor = (priority) => {
-    const colors = {
+  const getPriorityColor = (priority: string): string => {
+    const colors: Record<string, string> = {
       critical: 'text-red-600 bg-red-100',
       high: 'text-orange-600 bg-orange-100',
       medium: 'text-yellow-600 bg-yellow-100',
@@ -104,7 +114,7 @@ export default function TicketManager() {
     return colors[priority] || 'text-gray-600 bg-gray-100';
   };
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = (status: string) => {
     return status === 'resolved' ? <CheckCircle className="w-4 h-4" /> : <Clock className="w-4 h-4" />;
   };
 

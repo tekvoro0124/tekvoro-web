@@ -1,11 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Calendar, Users, MapPin, Trash2, AlertCircle, Edit2 } from 'lucide-react';
+import { Plus, Calendar, Users, MapPin, Trash2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+
+interface Event {
+  _id: string;
+  title: string;
+  description: string;
+  eventType: string;
+  date: string;
+  time?: string;
+  location: {
+    isVirtual: boolean;
+    meetingLink?: string;
+  };
+  registered: number;
+  capacity: number;
+}
 
 export default function EventManager() {
   const { isAdmin } = useAuth();
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -38,7 +53,7 @@ export default function EventManager() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('tekvoro_auth_token');
@@ -69,7 +84,7 @@ export default function EventManager() {
     }
   };
 
-  const deleteEvent = async (eventId) => {
+  const deleteEvent = async (eventId: string) => {
     if (!window.confirm('Delete this event?')) return;
 
     try {
@@ -86,8 +101,8 @@ export default function EventManager() {
     }
   };
 
-  const getEventTypeColor = (type) => {
-    const colors = {
+  const getEventTypeColor = (type: string): string => {
+    const colors: Record<string, string> = {
       webinar: 'bg-blue-900 text-blue-200',
       meetup: 'bg-green-900 text-green-200',
       hackathon: 'bg-purple-900 text-purple-200',
