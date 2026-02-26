@@ -1,93 +1,91 @@
-# Netlify configuration for Tekvoro Website with Email System
 [build]
   command = "npm run build"
   functions = "netlify/functions"
   publish = "dist"
 
   [build.environment]
-    NODE_ENV = "development"
+    NODE_ENV = "production"
 
-  ## (optional) Settings for Netlify Dev
-  ## https://github.com/netlify/cli/blob/main/docs/netlify-dev.md#project-detection
-  [dev]
-    command = "npm run dev" # Command to start your dev server
-    port = 5173 # Port that the dev server will be listening on
-    publish = "dist" # Folder with the static content for _redirect file
-    functions = "netlify/functions" # Functions directory
+[dev]
+  command = "npm run dev"
+  port = 5173
+  publish = "dist"
+  functions = "netlify/functions"
 
-  ## Environment variables for email system
-  [context.production.environment]
-    SENDGRID_API_KEY = "your-sendgrid-api-key"
-    EMAIL_FROM_ADDRESS = "info@tekvoro.com"
-    EMAIL_REPLY_TO = "info@tekvoro.com"
+[context.production.environment]
+  SENDGRID_API_KEY = "your-sendgrid-api-key"
+  EMAIL_FROM_ADDRESS = "info@tekvoro.com"
+  EMAIL_REPLY_TO = "info@tekvoro.com"
 
-  [context.deploy-preview.environment]
-    SENDGRID_API_KEY = "your-sendgrid-api-key"
-    EMAIL_FROM_ADDRESS = "info@tekvoro.com"
-    EMAIL_REPLY_TO = "info@tekvoro.com"
+[context.deploy-preview.environment]
+  SENDGRID_API_KEY = "your-sendgrid-api-key"
+  EMAIL_FROM_ADDRESS = "info@tekvoro.com"
+  EMAIL_REPLY_TO = "info@tekvoro.com"
 
-## API Proxy routes MUST come BEFORE the SPA catch-all
-## Proxy remaining API routes to Railway backend
+# ✅ STEP 1 — Specific Netlify Functions FIRST
+[[redirects]]
+  from = "/api/book-demo"
+  to = "/.netlify/functions/book-demo"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/subscribe"
+  to = "/.netlify/functions/subscribe"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ai-search"
+  to = "/.netlify/functions/ai-search"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/send-email"
+  to = "/.netlify/functions/send-email"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/email-track/*"
+  to = "/.netlify/functions/email-track/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/email-click/*"
+  to = "/.netlify/functions/email-track/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/email-analytics"
+  to = "/.netlify/functions/email-analytics"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/email-templates"
+  to = "/.netlify/functions/email-templates"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/test-sendgrid-domain"
+  to = "/.netlify/functions/test-sendgrid-domain"
+  status = 200
+  force = true
+
+# ✅ STEP 2 — General API proxy to Railway SECOND
 [[redirects]]
   from = "/api/*"
   to = "https://tekvoro-production.up.railway.app/api/:splat"
   status = 200
   force = true
 
-## Function redirects (specific endpoints)
-[[redirects]]
-  from = "/api/book-demo"
-  to = "/.netlify/functions/book-demo"
-  status = 200
-
-[[redirects]]
-  from = "/api/subscribe"
-  to = "/.netlify/functions/subscribe"
-  status = 200
-
-[[redirects]]
-  from = "/api/ai-search"
-  to = "/.netlify/functions/ai-search"
-  status = 200
-
-## Email system redirects
-[[redirects]]
-  from = "/api/email-track/*"
-  to = "/.netlify/functions/email-track/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/api/email-click/*"
-  to = "/.netlify/functions/email-track/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/api/email-analytics"
-  to = "/.netlify/functions/email-analytics"
-  status = 200
-
-[[redirects]]
-  from = "/api/email-templates"
-  to = "/.netlify/functions/email-templates"
-  status = 200
-
-[[redirects]]
-  from = "/api/send-email"
-  to = "/.netlify/functions/send-email"
-  status = 200
-
-[[redirects]]
-  from = "/api/test-sendgrid-domain"
-  to = "/.netlify/functions/test-sendgrid-domain"
-  status = 200
-
-## SPA catch-all MUST be LAST so it doesn't block API routes
+# ✅ STEP 3 — SPA catch-all ALWAYS LAST
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-## more info on configuring this file: https://ntl.fyi/file-based-build-config
-
-
-
