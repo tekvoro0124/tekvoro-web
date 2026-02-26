@@ -138,7 +138,15 @@ app.use((err, req, res, next) => {
 // SPA fallback - serve index.html for non-API routes in production
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
+    // Only serve SPA for non-API routes
+    if (!req.path.startsWith('/api')) {
+      return res.sendFile(path.join(__dirname, '../dist/index.html'));
+    }
+    // For unmapped API routes, return 404
+    res.status(404).json({
+      error: 'Not Found',
+      message: `API route ${req.originalUrl} not found`
+    });
   });
 } else {
   // 404 handler for development
