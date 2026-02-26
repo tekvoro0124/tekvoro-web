@@ -26,13 +26,15 @@
     EMAIL_FROM_ADDRESS = "info@tekvoro.com"
     EMAIL_REPLY_TO = "info@tekvoro.com"
 
-## Redirects for Single Page Application
+## API Proxy routes MUST come BEFORE the SPA catch-all
+## Proxy remaining API routes to Railway backend
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/api/*"
+  to = "https://tekvoro-production.up.railway.app/api/:splat"
   status = 200
+  force = true
 
-## Function redirects
+## Function redirects (specific endpoints)
 [[redirects]]
   from = "/api/book-demo"
   to = "/.netlify/functions/book-demo"
@@ -79,13 +81,11 @@
   to = "/.netlify/functions/test-sendgrid-domain"
   status = 200
 
-## Proxy remaining API routes to Railway backend
-## The backend URL will be injected via environment variable at build time
+## SPA catch-all MUST be LAST so it doesn't block API routes
 [[redirects]]
-  from = "/api/*"
-  to = "https://tekvoro-production.up.railway.app/api/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200
-  force = true
 
 ## more info on configuring this file: https://ntl.fyi/file-based-build-config
 
