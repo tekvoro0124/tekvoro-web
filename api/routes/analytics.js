@@ -92,7 +92,7 @@ router.get('/summary', async (req, res) => {
           type: '$_id',
           totalEvents: 1,
           totalUniqueUsers: { $size: { $reduce: { input: '$totalUniqueUsers', initialValue: [], in: { $setUnion: ['$$value', '$$this'] } } } },
-          totalUniqueSessions: { $size: { $reduce: { input: '$totalUniqueSessions', initialValue: [], in: { $setUnion: ['$$value', '$$this'] } } },
+          totalUniqueSessions: { $size: { $reduce: { input: '$totalUniqueSessions', initialValue: [], in: { $setUnion: ['$$value', '$$this'] } } } },
           dailyData: { $sortArray: { input: '$dailyData', sortBy: { date: 1 } } }
         }
       },
