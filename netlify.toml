@@ -27,6 +27,13 @@
     EMAIL_REPLY_TO = "info@tekvoro.com"
 
 ## API Proxy routes MUST come BEFORE the SPA catch-all
+## Health check endpoint
+[[redirects]]
+  from = "/api/health"
+  to = "https://tekvoro-production.up.railway.app/api/health"
+  status = 200
+  force = true
+
 ## Proxy remaining API routes to Railway backend
 [[redirects]]
   from = "/api/*"

@@ -149,8 +149,17 @@ app.get('/api/health', (req, res) => {
 });
 
 // Serve static files from frontend build AFTER routes
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../dist')));
+// Always serve static files regardless of NODE_ENV since they're baked into Docker image
+const distPath = path.join(__dirname, '../dist');
+const fs = require('fs');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath, {
+    maxAge: '1d',
+    etag: false
+  }));
+  console.log(`✅ Serving static files from ${distPath}`);
+} else {
+  console.warn(`⚠️  Static files directory not found: ${distPath}`);
 }
 
 // Error handling middleware
