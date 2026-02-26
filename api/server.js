@@ -71,9 +71,14 @@ app.use(compression());
 // Logging middleware
 app.use(morgan('combined'));
 
-// Serve static files from frontend build in production
+// Serve static files from frontend build in production (but not for /api routes)
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../dist')));
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next(); // Skip static serving for API routes
+    }
+    express.static(path.join(__dirname, '../dist'))(req, res, next);
+  });
 }
 
 // Database connection
