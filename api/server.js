@@ -71,16 +71,6 @@ app.use(compression());
 // Logging middleware
 app.use(morgan('combined'));
 
-// Serve static files from frontend build in production (but not for /api routes)
-if (process.env.NODE_ENV === 'production') {
-  app.use((req, res, next) => {
-    if (req.path.startsWith('/api')) {
-      return next(); // Skip static serving for API routes
-    }
-    express.static(path.join(__dirname, '../dist'))(req, res, next);
-  });
-}
-
 // Database connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tekvoro', {
   useNewUrlParser: true,
@@ -94,7 +84,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tekvoro',
   process.exit(1);
 });
 
-// Routes
+// Routes - MUST come before static file serving
 app.use('/api/auth', authRoutes);
 app.use('/api/client', require('./routes/clientAuth'));
 app.use('/api/portal', require('./routes/clientPortal'));
@@ -115,6 +105,11 @@ app.get('/api/health', (req, res) => {
     version: '1.0.0'
   });
 });
+
+// Serve static files from frontend build AFTER routes
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../dist')));
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
