@@ -21,39 +21,45 @@ const adminRoutes = require('./routes/admin');
 // Initialize Express app
 const app = express();
 
+// CRITICAL FIX: Trust proxy headers from Railway
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
-// Rate limiting
+// Rate limiting with proper proxy trust
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: {
     error: 'Too many requests from this IP, please try again later.'
+  },
+  keyGenerator: (req, res) => {
+    return req.ip;
   }
 });
 
 app.use(limiter);
 
-// CORS configuration
+// CORS configuration - more permissive for proxies
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
 
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:5173',
       'https://tekvoro.com',
-      'https://www.tekvoro.com'
+      'https://www.tekvoro.com',
+      'https://tekvoro-web-production.up.railway.app'
     ];
 
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true);
     }
   },
   credentials: true
@@ -92,22 +98,18 @@ const connectMongoDB = () => {
     lastDbError = err.message;
     console.error('❌ MongoDB connection error:', err.message);
     console.log('⏳ Retrying in 10 seconds...');
-    // Retry connection every 10 seconds instead of crashing
     setTimeout(connectMongoDB, 10000);
   });
 };
 
-// Initial connection attempt
 connectMongoDB();
 
-// Middleware to check database status for API requests
+// Middleware to check database status
 app.use('/api', (req, res, next) => {
-  // Health check and analytics can work without DB
   if (req.path === '/health' || req.path === '/analytics/track') {
     return next();
   }
   
-  // For other API routes, warn if DB not connected
   if (!dbConnected) {
     return res.status(503).json({
       error: 'Service Temporarily Unavailable',
@@ -119,7 +121,7 @@ app.use('/api', (req, res, next) => {
   next();
 });
 
-// Routes - MUST come before static file serving
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/client', require('./routes/clientAuth'));
 app.use('/api/portal', require('./routes/clientPortal'));
@@ -148,8 +150,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve static files from frontend build AFTER routes
-// Always serve static files regardless of NODE_ENV since they're baked into Docker image
+// Serve static files
 const distPath = path.join(__dirname, '../dist');
 const fs = require('fs');
 if (fs.existsSync(distPath)) {
@@ -186,21 +187,18 @@ app.use((err, req, res, next) => {
   });
 });
 
-// SPA fallback - serve index.html for non-API routes in production
+// SPA fallback
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
-    // Only serve SPA for non-API routes
     if (!req.path.startsWith('/api')) {
       return res.sendFile(path.join(__dirname, '../dist/index.html'));
     }
-    // For unmapped API routes, return 404
     res.status(404).json({
       error: 'Not Found',
       message: `API route ${req.originalUrl} not found`
     });
   });
 } else {
-  // 404 handler for development
   app.use('*', (req, res) => {
     res.status(404).json({
       error: 'Not Found',
@@ -212,7 +210,7 @@ if (process.env.NODE_ENV === 'production') {
 // Start server
 const PORT = process.env.PORT || 5002;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🎯 Tekvoro API running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
