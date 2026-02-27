@@ -46,7 +46,7 @@ router.post('/register', [
   body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
   body('name').trim().isLength({ min: 2, max: 100 }).withMessage('Name must be 2-100 characters'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('role').optional().isIn(['client', 'subscriber']).withMessage('Invalid role')
+  body('role').optional().isIn(['admin', 'client', 'subscriber']).withMessage('Invalid role')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
