@@ -16,7 +16,7 @@ const endpoints = [
   },
   {
     name: 'Railway Production API',
-    url: 'https://tekvoro-production.up.railway.app/api/health',
+    url: 'https://tekvoro-web-production.up.railway.app/api/health',
     timeout: 10000
   },
   {
