@@ -1,12 +1,16 @@
 // Analytics Service for tracking user interactions
 class AnalyticsService {
-  private apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  private apiBaseUrl: string;
   private sessionId: string;
   private isInitialized = false;
 
   constructor() {
+    const baseUrl = import.meta.env.VITE_API_URL || 'https://tekvoro-web-production.up.railway.app';
+    this.apiBaseUrl = import.meta.env.DEV ? 'http://localhost:5002' : baseUrl;
     this.sessionId = this.generateSessionId();
   }
+
+
 
   // Initialize analytics tracking
   initialize(): void {
@@ -81,7 +85,7 @@ class AnalyticsService {
   // Generic event tracking
   trackEvent(type: string, path: string, metadata: Record<string, any> = {}): void {
     // Send to backend (fire and forget)
-    fetch(`${this.apiBaseUrl}/analytics/track`, {
+    fetch(`${this.apiBaseUrl}/api/analytics/track`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
