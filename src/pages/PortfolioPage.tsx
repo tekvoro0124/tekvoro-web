@@ -58,202 +58,23 @@ export default function PortfolioPage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   useEffect(() => {
-    // This would normally fetch from API, but for now using static data
-    const portfolioProjects: Project[] = [
-      {
-        id: 'quickmela',
-        title: 'QuickMela - AI-Powered Auction Marketplace',
-        description: 'India\'s first AI-driven auction platform with real-time bidding, fraud detection, and WhatsApp integration.',
-        longDescription: 'QuickMela revolutionizes the auction industry by combining AI-powered fraud detection, real-time bidding systems, automated document verification, and seamless WhatsApp integration. The platform handles thousands of concurrent users while maintaining sub-second response times.',
-        category: 'marketplace',
-        status: 'live',
-        client: 'QuickMela Technologies',
-        industry: 'E-commerce & Auctions',
-        technologies: ['React', 'Node.js', 'MongoDB', 'WebRTC', 'WhatsApp API', 'TensorFlow', 'Redis', 'AWS'],
-        features: [
-          'Real-time bidding with WebRTC',
-          'AI fraud detection system',
-          'Automated KYC with document OCR',
-          'WhatsApp bot for notifications',
-          'Multi-language support (12 languages)',
-          'Advanced auction algorithms',
-          'Mobile-responsive design',
-          'Real-time analytics dashboard'
-        ],
-        metrics: {
-          users: '50,000+ registered users',
-          transactions: '₹25Cr+ transaction volume',
-          revenue: '₹2.5Cr annual recurring revenue',
-          performance: '99.9% uptime'
-        },
-        timeline: '8 months',
-        website: 'https://quickmela.com',
-        image: '/images/projects/quickmela-hero.jpg',
-        featured: true,
-        challenge: 'Traditional auction platforms in India suffered from fraud, lack of transparency, and poor user experience. Manual verification processes were slow and expensive.',
-        solution: 'Built an AI-first platform with automated fraud detection, real-time bidding, and seamless WhatsApp integration for instant notifications and support.',
-        results: [
-          'Reduced fraud by 95% using AI algorithms',
-          'Achieved 50,000+ registered users in first year',
-          'Processed ₹25Cr+ in transactions',
-          '99.9% platform uptime',
-          'Featured in Economic Times and YourStory'
-        ]
-      },
-      {
-        id: 'driverbharat',
-      title: 'DriverBharat - Driver Management Platform',
-      description: 'Comprehensive driver onboarding, verification, and management platform for transportation companies.',
-      longDescription: 'DriverBharat streamlines the entire driver lifecycle from recruitment to retirement. The platform handles background verification, training management, performance tracking, and compliance reporting for transportation fleets across India.',
-      category: 'platform',
-      status: 'live',
-      client: 'DriverBharat Solutions',
-      industry: 'Transportation & Logistics',
-      technologies: ['React', 'Python', 'PostgreSQL', 'FastAPI', 'Redis', 'Docker', 'AWS', 'Machine Learning'],
-      features: [
-        'Automated background verification',
-        'GPS tracking integration',
-        'Performance analytics dashboard',
-        'Training module management',
-        'Compliance reporting',
-        'Multi-company support',
-        'Mobile app for drivers',
-        'Real-time notifications'
-      ],
-      metrics: {
-        users: '10,000+ drivers onboarded',
-        transactions: '5,000+ active vehicles',
-        performance: '98% verification accuracy'
-      },
-      timeline: '6 months',
-      website: 'https://driverbharat.com',
-      image: '/images/projects/driverbharat-hero.jpg',
-      featured: true,
-      challenge: 'Transportation companies struggled with manual driver verification processes, high turnover rates, and compliance tracking across multiple locations.',
-      solution: 'Developed an end-to-end driver management platform with automated verification, performance tracking, and compliance automation.',
-      results: [
-        'Reduced onboarding time by 80%',
-        'Improved driver retention by 40%',
-        'Automated 100% of compliance reporting',
-        'Onboarded 10,000+ drivers successfully',
-        'Expanded to serve 50+ transportation companies'
-      ]
-    },
-    {
-      id: 'ai-agent-system',
-      title: 'AI Agent System for Insurance Claims',
-      description: 'Intelligent automation system that processes insurance claims using computer vision and NLP for fraud detection and automated approvals.',
-      longDescription: 'An enterprise-grade AI system that automates insurance claim processing using advanced computer vision for document analysis, natural language processing for claim descriptions, and machine learning for fraud detection.',
-      category: 'automation',
-      status: 'completed',
-      client: 'Leading Insurance Provider',
-      industry: 'Insurance & Finance',
-      technologies: ['Python', 'TensorFlow', 'OpenCV', 'spaCy', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
-      features: [
-        'Document image processing with OCR',
-        'Fraud detection algorithms',
-        'Automated claim categorization',
-        'Natural language claim analysis',
-        'Integration with core insurance systems',
-        'Real-time processing dashboard',
-        'Audit trail and compliance logging',
-        'Scalable microservices architecture'
-      ],
-      metrics: {
-        transactions: '100,000+ claims processed monthly',
-        performance: '85% automation rate'
-      },
-      timeline: '9 months',
-      image: '/images/projects/ai-agent-hero.jpg',
-      featured: true,
-      challenge: 'Insurance companies faced manual claim processing bottlenecks, high operational costs, and increasing fraud rates in claims submissions.',
-      solution: 'Built an AI-powered claims processing system that automates document analysis, fraud detection, and claim approvals using computer vision and machine learning.',
-      results: [
-        'Reduced claim processing time by 75%',
-        'Achieved 85% automation rate',
-        'Detected 92% of fraudulent claims',
-        'Saved ₹50L+ annually in operational costs',
-        'Improved customer satisfaction by 60%'
-      ]
-    },
-    {
-      id: 'fintech-dashboard',
-      title: 'FinTech Admin Dashboard',
-      description: 'Comprehensive admin dashboard for a fintech company managing loans, payments, and customer analytics.',
-      longDescription: 'A sophisticated admin dashboard that provides real-time insights into loan portfolios, payment processing, customer behavior analytics, and risk assessment for a leading fintech company.',
-      category: 'web',
-      status: 'live',
-      client: 'FinTech Startup',
-      industry: 'Financial Technology',
-      technologies: ['React', 'TypeScript', 'D3.js', 'Node.js', 'MongoDB', 'Redis', 'AWS', 'WebSocket'],
-      features: [
-        'Real-time loan portfolio analytics',
-        'Payment processing monitoring',
-        'Risk assessment dashboard',
-        'Customer behavior insights',
-        'Automated reporting system',
-        'Multi-tenant architecture',
-        'Advanced data visualization',
-        'Real-time notifications'
-      ],
-      metrics: {
-        users: '500+ daily active admins',
-        transactions: '₹500Cr+ loan portfolio managed'
-      },
-      timeline: '5 months',
-      image: '/images/projects/fintech-dashboard.jpg',
-      featured: false,
-      challenge: 'Fintech company needed a comprehensive admin interface to manage growing loan portfolios and monitor payment processing in real-time.',
-      solution: 'Developed a modern admin dashboard with advanced analytics, real-time monitoring, and automated reporting capabilities.',
-      results: [
-        'Reduced manual reporting time by 90%',
-        'Improved decision-making speed by 70%',
-        'Enhanced risk monitoring capabilities',
-        'Supported 500% business growth',
-        'Won industry recognition for UX excellence'
-      ]
-    },
-    {
-      id: 'healthcare-mobile',
-      title: 'Healthcare Management Mobile App',
-      description: 'Mobile application for healthcare providers to manage patient records, appointments, and telemedicine consultations.',
-      longDescription: 'A comprehensive mobile solution for healthcare providers featuring patient management, appointment scheduling, telemedicine integration, and medical record digitization.',
-      category: 'mobile',
-      status: 'completed',
-      client: 'Healthcare Network',
-      industry: 'Healthcare',
-      technologies: ['React Native', 'Node.js', 'MongoDB', 'WebRTC', 'Firebase', 'Stripe', 'AWS'],
-      features: [
-        'Patient record digitization',
-        'Appointment scheduling system',
-        'Video consultation integration',
-        'Prescription management',
-        'Medical imaging storage',
-        'Emergency alert system',
-        'Multi-language medical forms',
-        'HIPAA compliance'
-      ],
-      metrics: {
-        users: '2,000+ healthcare providers',
-        performance: '99.5% app stability'
-      },
-      timeline: '7 months',
-      image: '/images/projects/healthcare-app.jpg',
-      featured: false,
-      challenge: 'Healthcare providers struggled with paper-based records, appointment management, and lacked telemedicine capabilities.',
-      solution: 'Built a comprehensive mobile app with telemedicine, digital records, and appointment management for modern healthcare delivery.',
-      results: [
-        'Digitized 100,000+ patient records',
-        'Reduced appointment no-shows by 40%',
-        'Enabled 10,000+ telemedicine consultations',
-        'Improved patient satisfaction by 65%',
-        'Achieved 99.5% app uptime'
-      ]
-    }
-    ];
-
-    setProjects(portfolioProjects);
-    setFilteredProjects(portfolioProjects);
+    const fetchProjects = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://tekvoro-web-production.up.railway.app';
+        const response = await fetch(`${apiUrl}/api/portfolio`);
+        if (!response.ok) throw new Error('Failed to fetch projects');
+        const data = await response.json();
+        const portfolioProjects: Project[] = data.data || [];
+        setProjects(portfolioProjects);
+        setFilteredProjects(portfolioProjects);
+      } catch (err: any) {
+        console.error('Error fetching portfolio:', err);
+        // Fallback to empty array if fetch fails
+        setProjects([]);
+        setFilteredProjects([]);
+      }
+    };
+    fetchProjects();
   }, []);
 
   useEffect(() => {

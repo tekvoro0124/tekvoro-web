@@ -13,9 +13,9 @@ import {
   X,
   Save,
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import SEO from '../components/SEO';
-import ProtectedRoute from '../components/ProtectedRoute';
+import { useAuth } from '../../context/AuthContext';
+import SEO from '../../components/SEO';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 interface Investor {
   _id?: string;
@@ -55,7 +55,7 @@ interface PortfolioProject {
   results: string[];
 }
 
-export default function AdminCMSPageComponent() {
+function AdminCMSPageComponent() {
   const navigate = useNavigate();
   const { user, logout, token } = useAuth();
   const [activeTab, setActiveTab] = useState<'investors' | 'portfolio'>('investors');
@@ -825,11 +825,4 @@ export default function AdminCMSPageComponent() {
   );
 }
 
-// Wrap in ProtectedRoute
-export default function AdminCMSPage() {
-  return (
-    <ProtectedRoute requiredRole="admin">
-      <AdminCMSPageComponent />
-    </ProtectedRoute>
-  );
-}
+export default AdminCMSPageComponent;

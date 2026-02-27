@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LogIn, AlertCircle } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import SEO from '../components/SEO';
+import { useAuth } from '../../context/AuthContext';
+import SEO from '../../components/SEO';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();

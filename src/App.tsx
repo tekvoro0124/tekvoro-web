@@ -46,7 +46,8 @@ const SupportPage = lazy(() => import('./pages/contact/SupportPage'));
 const WhitepapersPage = lazy(() => import('./pages/insights/WhitepapersPage'));
 const BlogPage = lazy(() => import('./pages/BlogPage'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
-const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
+const AdminLogin = lazy(() => import('./pages/admin/AdminLoginPage'));
+const AdminCMS = lazy(() => import('./pages/admin/AdminCMSPage'));
 const WebDevelopmentPage = lazy(() => import('./pages/services/WebDevelopmentPage'));
 const MobileAppsPage = lazy(() => import('./pages/services/MobileAppsPage'));
 const UiUxDesignPage = lazy(() => import('./pages/services/UiUxDesignPage'));
@@ -145,6 +146,7 @@ function App() {
           <Route path="/insights/whitepapers" element={<WhitepapersPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/cms" element={<ProtectedRoute><AdminCMS /></ProtectedRoute>} />
           <Route path="/admin/password-manager" element={<PasswordManager />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/email-analytics" element={<EmailAnalyticsPage />} />

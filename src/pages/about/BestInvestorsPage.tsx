@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 import SEO from '../../components/SEO';
 
 type Investor = {
-  _id?: string;
   name: string;
   logo: string;
   photo: string;
@@ -27,11 +26,7 @@ type Investor = {
   };
 };
 
-const BestInvestorsPage = () => {
-  const [investors, setInvestors] = useState<Investor[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [modalInvestor, setModalInvestor] = useState<Investor | null>(null);
+const investors: Investor[] = [
   {
     name: 'Visionary Ventures',
     logo: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80',
@@ -154,12 +149,6 @@ const BestInvestorsPage = () => {
   },
 ];
 
-const testimonials = investors.filter(i => i.testimonial).map(i => ({
-  ...i.testimonial,
-  photo: i.photo,
-  name: i.name,
-}));
-
 const stats = [
   { icon: <TrendingUp className="text-green-400" />, label: 'Capital Raised', value: '$1.2B+' },
   { icon: <Users className="text-blue-400" />, label: 'Investors', value: '30+' },
@@ -167,11 +156,38 @@ const stats = [
   { icon: <Star className="text-yellow-400" />, label: 'Satisfaction', value: '99%' },
 ];
 
-const featured = investors.filter(i => i.featured);
-
 const BestInvestorsPage = () => {
   const [modalInvestor, setModalInvestor] = useState<Investor | null>(null);
   const [carouselIdx, setCarouselIdx] = useState(0);
+  const [allInvestors, setInvestors] = useState<Investor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchInvestors = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://tekvoro-web-production.up.railway.app';
+        const response = await fetch(`${apiUrl}/api/investors`);
+        if (!response.ok) throw new Error('Failed to fetch investors');
+        const data = await response.json();
+        setInvestors(data.data || []);
+      } catch (err: any) {
+        console.error('Error fetching investors:', err);
+        setError(err.message);
+        setInvestors([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchInvestors();
+  }, []);
+
+  const featured = allInvestors.filter(i => i.featured);
+  const testimonials = allInvestors.filter(i => i.testimonial).map(i => ({
+    ...i.testimonial,
+    photo: i.photo,
+    name: i.name,
+  }));
   return (
     <div className="bg-black min-h-screen flex flex-col">
       <SEO 
@@ -339,8 +355,23 @@ const BestInvestorsPage = () => {
           >
             All Investors
           </motion.h2>
+
+          {loading && (
+            <div className="text-center py-12">
+              <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-400">Loading investors...</p>
+            </div>
+          )}
+
+          {error && !loading && (
+            <div className="text-center py-12">
+              <p className="text-red-400">Failed to load investors. Please try again later.</p>
+            </div>
+          )}
+
+          {!loading && !error && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            {investors.map((inv, idx) => (
+            {allInvestors.map((inv, idx) => (
               <motion.div
                 key={inv.name}
                 initial={{ opacity: 0, y: 40 }}
@@ -362,6 +393,7 @@ const BestInvestorsPage = () => {
               </motion.div>
             ))}
           </div>
+          )}
         </div>
       </section>
 
