@@ -2,10 +2,11 @@ import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Award, Star, Users, TrendingUp, ArrowRight, Globe, Sparkles, X, Linkedin, Twitter, Link as LinkIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SEO from '../../components/SEO';
 
 type Investor = {
+  _id?: string;
   name: string;
   logo: string;
   photo: string;
@@ -26,7 +27,11 @@ type Investor = {
   };
 };
 
-const investors: Investor[] = [
+const BestInvestorsPage = () => {
+  const [investors, setInvestors] = useState<Investor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [modalInvestor, setModalInvestor] = useState<Investor | null>(null);
   {
     name: 'Visionary Ventures',
     logo: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80',

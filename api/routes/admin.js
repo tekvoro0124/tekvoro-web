@@ -8,7 +8,9 @@ const {
   EmailSubscription,
   EmailCampaign,
   Analytics,
-  User
+  User,
+  Investor,
+  PortfolioProject
 } = require('../models');
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
 
@@ -369,6 +371,216 @@ router.get('/analytics', async (req, res) => {
   } catch (error) {
     console.error('Error fetching analytics:', error);
     res.status(500).json({ error: 'Failed to fetch analytics' });
+  }
+});
+
+// ================================
+// INVESTOR MANAGEMENT
+// ================================
+
+router.get('/investors', async (req, res) => {
+  try {
+    const { page = 1, limit = 10, featured } = req.query;
+    let query = {};
+    if (featured !== undefined) query.featured = featured === 'true';
+
+    const investors = await Investor.find(query)
+      .sort({ order: 1, createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
+    const total = await Investor.countDocuments(query);
+
+    res.json({
+      investors,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / limit),
+        totalInvestors: total,
+        hasNext: page * limit < total,
+        hasPrev: page > 1
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching investors:', error);
+    res.status(500).json({ error: 'Failed to fetch investors' });
+  }
+});
+
+router.post('/investors', [
+  body('name').trim().isLength({ min: 1, max: 100 }).withMessage('Name required'),
+  body('logo').trim().isLength({ min: 1 }).withMessage('Logo URL required'),
+  body('location').trim().isLength({ min: 1 }).withMessage('Location required'),
+  body('website').trim().isLength({ min: 1 }).withMessage('Website required')
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+    }
+
+    const investor = new Investor(req.body);
+    await investor.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Investor created successfully',
+      investor
+    });
+  } catch (error) {
+    console.error('Error creating investor:', error);
+    res.status(500).json({ error: 'Failed to create investor' });
+  }
+});
+
+router.put('/investors/:id', async (req, res) => {
+  try {
+    const investor = await Investor.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!investor) {
+      return res.status(404).json({ error: 'Investor not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Investor updated successfully',
+      investor
+    });
+  } catch (error) {
+    console.error('Error updating investor:', error);
+    res.status(500).json({ error: 'Failed to update investor' });
+  }
+});
+
+router.delete('/investors/:id', async (req, res) => {
+  try {
+    const investor = await Investor.findByIdAndDelete(req.params.id);
+
+    if (!investor) {
+      return res.status(404).json({ error: 'Investor not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Investor deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting investor:', error);
+    res.status(500).json({ error: 'Failed to delete investor' });
+  }
+});
+
+// ================================
+// PORTFOLIO PROJECT MANAGEMENT
+// ================================
+
+router.get('/portfolio', async (req, res) => {
+  try {
+    const { page = 1, limit = 10, featured, category, status } = req.query;
+    let query = {};
+    if (featured !== undefined) query.featured = featured === 'true';
+    if (category) query.category = category;
+    if (status) query.status = status;
+
+    const projects = await PortfolioProject.find(query)
+      .sort({ order: 1, createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
+    const total = await PortfolioProject.countDocuments(query);
+
+    res.json({
+      projects,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / limit),
+        totalProjects: total,
+        hasNext: page * limit < total,
+        hasPrev: page > 1
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching portfolio:', error);
+    res.status(500).json({ error: 'Failed to fetch portfolio' });
+  }
+});
+
+router.post('/portfolio', [
+  body('title').trim().isLength({ min: 1, max: 200 }).withMessage('Title required'),
+  body('slug').trim().isLength({ min: 1 }).withMessage('Slug required'),
+  body('description').trim().isLength({ min: 1 }).withMessage('Description required'),
+  body('client').trim().isLength({ min: 1 }).withMessage('Client required'),
+  body('category').isIn(['marketplace', 'platform', 'automation', 'mobile', 'web']).withMessage('Valid category required'),
+  body('status').isIn(['live', 'completed', 'in-development']).withMessage('Valid status required')
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+    }
+
+    // Check for duplicate slug
+    const existingProject = await PortfolioProject.findOne({ slug: req.body.slug });
+    if (existingProject) {
+      return res.status(400).json({ error: 'Project with this slug already exists' });
+    }
+
+    const project = new PortfolioProject(req.body);
+    await project.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Portfolio project created successfully',
+      project
+    });
+  } catch (error) {
+    console.error('Error creating portfolio project:', error);
+    res.status(500).json({ error: 'Failed to create portfolio project' });
+  }
+});
+
+router.put('/portfolio/:id', async (req, res) => {
+  try {
+    const project = await PortfolioProject.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Portfolio project updated successfully',
+      project
+    });
+  } catch (error) {
+    console.error('Error updating portfolio project:', error);
+    res.status(500).json({ error: 'Failed to update portfolio project' });
+  }
+});
+
+router.delete('/portfolio/:id', async (req, res) => {
+  try {
+    const project = await PortfolioProject.findByIdAndDelete(req.params.id);
+
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Portfolio project deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting portfolio project:', error);
+    res.status(500).json({ error: 'Failed to delete portfolio project' });
   }
 });
 

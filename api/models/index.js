@@ -571,6 +571,178 @@ emailCampaignSchema.index({ status: 1, scheduledDate: 1 });
 analyticsSchema.index({ date: -1, type: 1 });
 analyticsSchema.index({ path: 1, date: -1 });
 
+// Investor Schema
+const investorSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  logo: {
+    type: String,
+    required: true
+  },
+  photo: {
+    type: String,
+    required: true
+  },
+  location: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  website: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  description: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  bio: {
+    type: String,
+    required: true
+  },
+  investmentFocus: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  portfolio: [{
+    type: String,
+    trim: true
+  }],
+  social: {
+    linkedin: String,
+    twitter: String
+  },
+  featured: {
+    type: Boolean,
+    default: false
+  },
+  testimonial: {
+    quote: String,
+    author: String
+  },
+  status: {
+    type: String,
+    enum: ['active', 'inactive'],
+    default: 'active'
+  },
+  order: {
+    type: Number,
+    default: 0
+  }
+}, {
+  timestamps: true
+});
+
+// Portfolio Project Schema
+const portfolioProjectSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  description: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  longDescription: {
+    type: String,
+    required: true
+  },
+  category: {
+    type: String,
+    required: true,
+    enum: ['marketplace', 'platform', 'automation', 'mobile', 'web']
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ['live', 'completed', 'in-development']
+  },
+  client: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  industry: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  technologies: [{
+    type: String,
+    trim: true
+  }],
+  features: [{
+    type: String,
+    trim: true
+  }],
+  metrics: {
+    users: String,
+    transactions: String,
+    revenue: String,
+    performance: String
+  },
+  timeline: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  website: String,
+  image: {
+    type: String,
+    required: true
+  },
+  featured: {
+    type: Boolean,
+    default: false
+  },
+  challenge: {
+    type: String,
+    required: true
+  },
+  solution: {
+    type: String,
+    required: true
+  },
+  results: [{
+    type: String,
+    trim: true
+  }],
+  order: {
+    type: Number,
+    default: 0
+  },
+  seoTitle: String,
+  seoDescription: String,
+  keywords: [{
+    type: String,
+    trim: true
+  }]
+}, {
+  timestamps: true
+});
+
+// Create indexes
+investorSchema.index({ featured: 1, order: 1 });
+investorSchema.index({ status: 1 });
+portfolioProjectSchema.index({ slug: 1 });
+portfolioProjectSchema.index({ category: 1, featured: 1 });
+portfolioProjectSchema.index({ status: 1 });
+
 // Create models
 const User = mongoose.model('User', userSchema);
 const BlogPost = mongoose.model('BlogPost', blogPostSchema);
@@ -580,6 +752,8 @@ const ContactSubmission = mongoose.model('ContactSubmission', contactSubmissionS
 const EmailSubscription = mongoose.model('EmailSubscription', emailSubscriptionSchema);
 const EmailCampaign = mongoose.model('EmailCampaign', emailCampaignSchema);
 const Analytics = mongoose.model('Analytics', analyticsSchema);
+const Investor = mongoose.model('Investor', investorSchema);
+const PortfolioProject = mongoose.model('PortfolioProject', portfolioProjectSchema);
 
 module.exports = {
   User,
@@ -589,5 +763,7 @@ module.exports = {
   ContactSubmission,
   EmailSubscription,
   EmailCampaign,
-  Analytics
+  Analytics,
+  Investor,
+  PortfolioProject
 };
