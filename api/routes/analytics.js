@@ -1,7 +1,4 @@
 const express = require('express');
-const { Analytics } = require('../models');
-const { optionalAuth } = require('../middleware/auth');
-
 const router = express.Router();
 
 // Track page view or other analytics event

@@ -2,8 +2,8 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import SEO from '../components/SEO';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { Calendar, Clock, User, Mail, CheckCircle, ArrowRight, Sparkles, Zap, Target, Users, TrendingUp, ChevronRight, ChevronLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, User, CheckCircle, Sparkles, Zap, Target, Users, ChevronRight, ChevronLeft } from 'lucide-react';
 import emailService from '../services/emailService';
 
 const steps = [
@@ -84,8 +84,6 @@ const BookDemoPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -131,11 +129,12 @@ const BookDemoPage = () => {
       console.log('Demo booking email sent:', emailResponse);
 
       // Then, submit to the main booking system
-      const functionUrl = import.meta.env.DEV 
-        ? 'http://localhost:8888/.netlify/functions/book-demo'
-        : 'https://tekvoro.com/.netlify/functions/book-demo';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://tekvoro-web-production.up.railway.app';
+      const emailUrl = import.meta.env.DEV 
+        ? 'http://localhost:5002/api/email/book-demo'
+        : `${apiUrl}/api/email/book-demo`;
       
-      const response = await fetch(functionUrl, {
+      const response = await fetch(emailUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -684,4 +683,4 @@ const BookDemoPage = () => {
   );
 };
 
-export default BookDemoPage; 
+export default BookDemoPage;

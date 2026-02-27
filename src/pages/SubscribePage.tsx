@@ -5,30 +5,15 @@ import { useState } from 'react';
 import { 
   Sparkles, 
   ArrowRight, 
-  Mail, 
-  Bell, 
-  Target, 
   Users, 
-  TrendingUp,
-  Zap,
-  Shield,
-  Globe,
   CheckCircle,
   Star,
-  Award,
-  Calendar,
-  Clock,
-  Eye,
-  Heart,
-  BookOpen,
-  Lightbulb,
   BarChart3,
-  Rocket,
   Brain,
-  Cpu,
-  Database,
   Send,
-  Lock,
+  Clock,
+  Bell,
+  BookOpen,
   Shield as ShieldIcon
 } from 'lucide-react';
 
@@ -156,11 +141,12 @@ export default function SubscribePage() {
     setSubmitMessage('');
 
     try {
-      const functionUrl = import.meta.env.DEV 
-        ? 'http://localhost:8888/.netlify/functions/subscribe'
-        : 'https://tekvoro.com/.netlify/functions/subscribe';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://tekvoro-web-production.up.railway.app';
+      const subscribeUrl = import.meta.env.DEV
+        ? 'http://localhost:5002/api/email/subscribe'
+        : `${apiUrl}/api/email/subscribe`;
       
-      const response = await fetch(functionUrl, {
+      const response = await fetch(subscribeUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -519,7 +505,7 @@ export default function SubscribePage() {
 
               {/* Privacy Notice */}
               <div className="flex items-start gap-3 p-4 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
-                <Lock className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                <ShieldIcon className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                 <div className="text-sm text-gray-300">
                   <p className="font-semibold text-white mb-1">Privacy & Security</p>
                   <p>Your information is protected by enterprise-grade security. We never share your data with third parties and you can unsubscribe at any time.</p>

@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Twitter, Youtube, Globe, ArrowRight, Sparkles, Code, Cloud, Smartphone, MonitorSmartphone, PenTool, BookOpen, FileText, CalendarDays, Award } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Twitter, Youtube, Globe, ArrowRight, Sparkles } from 'lucide-react';
 import Logo from './Logo';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { supabase } from '../../utils/supabaseClient';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -20,11 +19,12 @@ const Footer = () => {
     if (!newsletterEmail) return;
     
     try {
-      const functionUrl = import.meta.env.DEV 
-        ? 'http://localhost:8888/.netlify/functions/subscribe'
-        : 'https://tekvoro.com/.netlify/functions/subscribe';
+      const functionUrl = import.meta.env.VITE_API_URL || 'https://tekvoro-web-production.up.railway.app';
+      const subscribeUrl = import.meta.env.DEV
+        ? 'http://localhost:5002/api/email/subscribe'
+        : `${functionUrl}/api/email/subscribe`;
       
-      const response = await fetch(functionUrl, {
+      const response = await fetch(subscribeUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
