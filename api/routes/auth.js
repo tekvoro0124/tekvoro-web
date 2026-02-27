@@ -341,4 +341,52 @@ router.put('/users/:userId/status', authenticateToken, requireAdmin, [
   }
 });
 
+// Initialize admin user (unprotected, only works if no admin exists)
+router.post('/init-admin', async (req, res) => {
+  try {
+    const { email = 'admin@tekvoro.com', password = 'admin123456', name = 'Admin' } = req.body;
+
+    // Check if admin already exists
+    const existingAdmin = await User.findOne({ role: 'admin' });
+    if (existingAdmin) {
+      return res.status(400).json({
+        error: 'Admin already exists',
+        message: 'Cannot create another admin user'
+      });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_ROUNDS) || 12);
+
+    // Create admin user
+    const adminUser = new User({
+      email,
+      name,
+      password: hashedPassword,
+      role: 'admin'
+    });
+
+    await adminUser.save();
+
+    // Generate token
+    const token = generateToken(adminUser);
+
+    res.status(201).json({
+      success: true,
+      message: 'Admin user created successfully',
+      user: {
+        id: adminUser._id,
+        email: adminUser.email,
+        name: adminUser.name,
+        role: adminUser.role
+      },
+      token
+    });
+
+  } catch (error) {
+    console.error('Admin init error:', error);
+    res.status(500).json({ error: 'Failed to initialize admin' });
+  }
+});
+
 module.exports = router;
