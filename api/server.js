@@ -30,6 +30,7 @@ const adminRoutes = require('./routes/admin');
 // const testimonialsRoutes = require('./routes/testimonials');  // Not yet implemented
 const newsRoutes = require('./routes/newsRoutes');
 const teamRoutes = require('./routes/team');
+const chatRoutes = require('./routes/chat');
 // const clientsRoutes = require('./routes/clients');  // Not yet implemented
 // const marketplaceSearchRoutes = require('./routes/marketplace-search');  // Not yet implemented
 const authRoutes = require('./routes/auth');
@@ -198,6 +199,7 @@ app.use('/api/events', eventsRoutes);
 // app.use('/api/testimonials', testimonialsRoutes);  // Not yet implemented
 app.use('/api/news', newsRoutes);
 app.use('/api/team', teamRoutes);
+app.use('/api/chat', chatRoutes);
 // app.use('/api/clients', clientsRoutes);  // Not yet implemented
 app.use('/api/admin', adminRoutes);
 // app.use('/api/admin-monitoring', require('./routes/admin-monitoring'));  // Not yet implemented

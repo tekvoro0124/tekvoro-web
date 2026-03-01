@@ -6,7 +6,7 @@ import ScrollToTopButton from './components/layout/ScrollToTopButton';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import PasswordManager from './components/admin/PasswordManager';
 import analyticsService from './services/analyticsService';
-import FloatingAIAssistant from './components/FloatingAIAssistant';
+import TekvoroChatbot from './components/TekvoroChatbot';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const EnterpriseAutomationPage = lazy(() => import('./pages/services/EnterpriseAutomationPage'));
@@ -115,7 +115,7 @@ function App() {
     <>
       <ScrollToTop />
       <ScrollToTopButton />
-      <FloatingAIAssistant />
+      <TekvoroChatbot />
       <HelmetProvider>
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-400"></div></div>}>
         <Routes>
