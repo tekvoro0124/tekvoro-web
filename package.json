@@ -6,7 +6,8 @@
   "description": "Tekvoro website - Dynamic content management system",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "build:check": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest",
     "test:health": "node test-api-health.js",
