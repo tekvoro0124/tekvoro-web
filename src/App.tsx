@@ -7,6 +7,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import PasswordManager from './components/admin/PasswordManager';
 import analyticsService from './services/analyticsService';
 import TekvoroChatbot from './components/TekvoroChatbot';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const EnterpriseAutomationPage = lazy(() => import('./pages/services/EnterpriseAutomationPage'));
@@ -112,7 +113,7 @@ function App() {
   }, []);
 
   return (
-    <>
+    <ErrorBoundary>
       <ScrollToTop />
       <ScrollToTopButton />
       <TekvoroChatbot />
@@ -241,7 +242,7 @@ function App() {
         </Routes>
         </Suspense>
       </HelmetProvider>
-    </>
+    </ErrorBoundary>
   );
 }
 

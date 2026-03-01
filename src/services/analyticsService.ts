@@ -1,20 +1,60 @@
 // Analytics Service for tracking user interactions
+// Integrates with backend API and Google Analytics 4
+
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+    dataLayer: any[];
+  }
+}
+
 class AnalyticsService {
   private apiBaseUrl: string;
   private sessionId: string;
   private isInitialized = false;
+  private gaMeasurementId: string | undefined;
 
   constructor() {
     const baseUrl = import.meta.env.VITE_API_URL || 'https://tekvoro-web-production.up.railway.app';
     this.apiBaseUrl = import.meta.env.DEV ? 'http://localhost:5002' : baseUrl;
     this.sessionId = this.generateSessionId();
+    this.gaMeasurementId = import.meta.env.VITE_GA_MEASUREMENT_ID;
   }
 
+  // Initialize Google Analytics
+  private initGoogleAnalytics(): void {
+    if (!this.gaMeasurementId || typeof window === 'undefined') return;
 
+    // Load gtag.js script
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${this.gaMeasurementId}`;
+    document.head.appendChild(script);
+
+    // Initialize dataLayer and gtag function
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function gtag(...args: any[]) {
+      window.dataLayer.push(args);
+    };
+    window.gtag('js', new Date());
+    window.gtag('config', this.gaMeasurementId, {
+      page_path: window.location.pathname,
+      send_page_view: true,
+    });
+  }
+
+  // Send event to Google Analytics
+  private sendToGA(eventName: string, params: Record<string, any> = {}): void {
+    if (!this.gaMeasurementId || typeof window === 'undefined' || !window.gtag) return;
+    window.gtag('event', eventName, params);
+  }
 
   // Initialize analytics tracking
   initialize(): void {
     if (this.isInitialized) return;
+
+    // Initialize Google Analytics
+    this.initGoogleAnalytics();
 
     this.trackPageView(window.location.pathname);
 
@@ -36,6 +76,13 @@ class AnalyticsService {
 
   // Track page view
   trackPageView(path: string, metadata: Record<string, any> = {}): void {
+    // Send to Google Analytics
+    this.sendToGA('page_view', {
+      page_path: path,
+      page_title: document.title,
+    });
+
+    // Send to backend
     this.trackEvent('page-view', path, {
       referrer: document.referrer,
       userAgent: navigator.userAgent,
@@ -45,6 +92,10 @@ class AnalyticsService {
 
   // Track contact form submission
   trackContactSubmission(type: string = 'contact'): void {
+    this.sendToGA('generate_lead', {
+      event_category: 'Contact',
+      event_label: type,
+    });
     this.trackEvent('contact-form', window.location.pathname, {
       formType: type,
       timestamp: new Date().toISOString()
@@ -53,6 +104,10 @@ class AnalyticsService {
 
   // Track subscription
   trackSubscription(plan: string = 'free'): void {
+    this.sendToGA('sign_up', {
+      event_category: 'Subscription',
+      event_label: plan,
+    });
     this.trackEvent('subscription', window.location.pathname, {
       plan,
       timestamp: new Date().toISOString()
@@ -61,6 +116,10 @@ class AnalyticsService {
 
   // Track demo request
   trackDemoRequest(): void {
+    this.sendToGA('generate_lead', {
+      event_category: 'Conversion',
+      event_label: 'Demo Request',
+    });
     this.trackEvent('demo-request', window.location.pathname, {
       timestamp: new Date().toISOString()
     });
@@ -68,6 +127,9 @@ class AnalyticsService {
 
   // Track campaign open (when user opens newsletter)
   trackCampaignOpen(campaignId: string): void {
+    this.sendToGA('campaign_open', {
+      campaign_id: campaignId,
+    });
     this.trackEvent('campaign-open', window.location.pathname, {
       campaignId,
       timestamp: new Date().toISOString()
@@ -76,6 +138,10 @@ class AnalyticsService {
 
   // Track campaign click (when user clicks link in newsletter)
   trackCampaignClick(campaignId: string, linkUrl: string): void {
+    this.sendToGA('campaign_click', {
+      campaign_id: campaignId,
+      link_url: linkUrl,
+    });
     this.trackEvent('campaign-click', linkUrl, {
       campaignId,
       timestamp: new Date().toISOString()
