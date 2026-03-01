@@ -12,23 +12,17 @@ RUN npm install --legacy-peer-deps || true
 # Build frontend
 RUN npm run build
 
+# Install production dependencies only
+RUN npm install --production --legacy-peer-deps || true && \
+    cd api && npm install --production --legacy-peer-deps || true && cd ..
+
 # Production stage
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy all files
-COPY . .
-
-# Install production dependencies only
-RUN npm install --production --legacy-peer-deps && \
-    cd api && npm install --production --legacy-peer-deps && cd ..
-
-# Copy built frontend from builder
-COPY --from=builder /app/dist ./dist
-
-# Copy API files
-COPY api/ ./api/
+# Copy everything from builder (includes built dist and node_modules)
+COPY --from=builder /app /app
 
 # Expose port
 EXPOSE 5002
