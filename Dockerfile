@@ -1,4 +1,4 @@
-FROM node:18-alpine as builder
+FROM node:20-alpine as builder
 
 # Set working directory
 WORKDIR /app
@@ -17,7 +17,7 @@ RUN npm install --omit=dev --legacy-peer-deps && \
     cd api && npm install --omit=dev --legacy-peer-deps && cd ..
 
 # Production stage
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
