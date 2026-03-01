@@ -137,24 +137,24 @@ const CorporateNewsSearchPopup: React.FC<CorporateNewsSearchPopupProps> = ({
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="fixed top-1/4 left-1/2 -translate-x-1/2 w-full max-w-2xl z-50"
+        className="fixed inset-x-0 top-[15%] sm:top-1/4 flex justify-center items-start z-50 px-4 sm:px-6"
       >
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 w-full max-w-2xl">
           {/* Search Input */}
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center gap-3 justify-center">
-              <Search className="w-5 h-5 text-teal-600" />
+          <div className="p-4 sm:p-6 border-b border-gray-200">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Search className="w-5 h-5 text-teal-600 flex-shrink-0" />
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="Search corporate news, companies, industries..."
+                placeholder="Search news, companies, industries..."
                 value={searchQuery}
                 onChange={e => {
                   setSearchQuery(e.target.value);
                   setSelectedIndex(-1);
                 }}
                 onKeyDown={handleKeyDown}
-                className="flex-1 text-lg outline-none bg-transparent text-gray-700 placeholder:text-gray-500 text-center"
+                className="flex-1 text-base sm:text-lg outline-none bg-transparent text-gray-700 placeholder:text-gray-500"
               />
               {searchQuery && (
                 <button
@@ -171,7 +171,7 @@ const CorporateNewsSearchPopup: React.FC<CorporateNewsSearchPopupProps> = ({
           </div>
 
           {/* Results or Trending */}
-          <div className="max-h-96 overflow-y-auto">
+          <div className="max-h-[50vh] sm:max-h-96 overflow-y-auto">
             {searchQuery ? (
               <>
                 {/* Suggestions */}
@@ -248,12 +248,12 @@ const CorporateNewsSearchPopup: React.FC<CorporateNewsSearchPopupProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 text-xs text-gray-600">
-            <div className="flex justify-between">
-              <span>🔓 Trust-First Intelligence • AI-Powered Analysis</span>
+          <div className="px-4 sm:px-6 py-3 bg-gray-50 border-t border-gray-200 text-xs text-gray-600">
+            <div className="flex justify-between items-center gap-2">
+              <span className="truncate">🔓 Trust-First Intelligence • AI-Powered Analysis</span>
               <button
                 onClick={onClose}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 flex-shrink-0"
               >
                 ESC to close
               </button>
