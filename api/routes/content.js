@@ -645,4 +645,56 @@ router.get('/trending', async (req, res) => {
   }
 });
 
+// ========== SEED DATABASE (Protected) ==========
+router.post('/seed', async (req, res) => {
+  try {
+    const { secret } = req.body;
+    const SEED_SECRET = process.env.SEED_SECRET || 'tekvoro-seed-2024';
+    
+    if (secret !== SEED_SECRET) {
+      return res.status(403).json({ error: 'Invalid seed secret' });
+    }
+
+    // Check if already seeded
+    const existingCount = await BlogPost.countDocuments();
+    if (existingCount > 0) {
+      return res.json({ 
+        message: 'Database already seeded', 
+        blogPosts: existingCount,
+        skipped: true  
+      });
+    }
+
+    // Run seed
+    const seedModule = require('../scripts/seed');
+    if (typeof seedModule.seedDatabase === 'function') {
+      await seedModule.seedDatabase();
+    } else {
+      // Inline minimal seed for production
+      const seedData = require('../scripts/seed-data');
+      if (seedData) {
+        await BlogPost.insertMany(seedData.blogPosts || []);
+        await Service.insertMany(seedData.services || []);
+        await CaseStudy.insertMany(seedData.caseStudies || []);
+      }
+    }
+
+    const [blogs, services, caseStudies] = await Promise.all([
+      BlogPost.countDocuments(),
+      Service.countDocuments(),
+      CaseStudy.countDocuments()
+    ]);
+
+    res.json({ 
+      message: 'Database seeded successfully',
+      blogPosts: blogs,
+      services: services,
+      caseStudies: caseStudies
+    });
+  } catch (error) {
+    console.error('Seed error:', error);
+    res.status(500).json({ error: 'Seed failed', details: error.message });
+  }
+});
+
 module.exports = router;
