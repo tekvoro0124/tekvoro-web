@@ -130,11 +130,11 @@ const BookDemoPage = () => {
 
       // Then, submit to the main booking system
       const apiUrl = import.meta.env.VITE_API_URL || 'https://tekvoro-web-production.up.railway.app';
-      const emailUrl = import.meta.env.DEV 
-        ? 'http://localhost:5002/api/email/book-demo'
-        : `${apiUrl}/api/email/book-demo`;
+      const bookingUrl = import.meta.env.DEV 
+        ? 'http://localhost:5002/api/contact/book-demo'
+        : `${apiUrl}/api/contact/book-demo`;
       
-      const response = await fetch(emailUrl, {
+      const response = await fetch(bookingUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
