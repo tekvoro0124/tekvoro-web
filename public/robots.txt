@@ -1,4 +1,39 @@
+# Tekvoro - Technology Solutions & Innovation
+# https://www.tekvoro.com
+
 User-agent: *
 Allow: /
 
-Sitemap: https://www.tekvoro.com/sitemap.xml 
+# Block admin and private routes
+Disallow: /admin/
+Disallow: /portal/dashboard
+Disallow: /portal/projects
+Disallow: /portal/files
+Disallow: /portal/support
+Disallow: /marketing/
+Disallow: /marketing-debug
+Disallow: /password-reset
+Disallow: /unsubscribe
+
+# Allow search engines to crawl all public pages
+Allow: /services/
+Allow: /products/
+Allow: /events/
+Allow: /insights/
+Allow: /industries/
+Allow: /about/
+Allow: /blog/
+Allow: /contact/
+Allow: /careers
+Allow: /portfolio
+Allow: /resources
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://www.tekvoro.com/sitemap.xml
+
+# Additional sitemaps for future use
+# Sitemap: https://www.tekvoro.com/blog-sitemap.xml
+# Sitemap: https://www.tekvoro.com/services-sitemap.xml 
