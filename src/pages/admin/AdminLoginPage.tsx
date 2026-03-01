@@ -115,26 +115,6 @@ export default function AdminLoginPage() {
               </motion.button>
             </form>
 
-            {/* Divider */}
-            <div className="my-6 relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-neutral-900 text-gray-500">Demo Credentials</span>
-              </div>
-            </div>
-
-            {/* Demo Info */}
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mb-6">
-              <p className="text-xs text-gray-400 mb-2">
-                <span className="font-semibold text-blue-300">Email:</span> admin@tekvoro.com
-              </p>
-              <p className="text-xs text-gray-400">
-                <span className="font-semibold text-blue-300">Password:</span> admin123456
-              </p>
-            </div>
-
             {/* Footer Links */}
             <div className="text-center text-sm">
               <p className="text-gray-400">

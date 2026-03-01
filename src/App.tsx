@@ -83,6 +83,11 @@ const CampaignsIndexPage = lazy(() => import('./pages/marketing/campaigns-index'
 const EmailAnalyticsPage = lazy(() => import('./pages/admin/EmailAnalyticsPage'));
 const EmailTemplatesPage = lazy(() => import('./pages/admin/EmailTemplatesPage'));
 const EmailCampaignsPage = lazy(() => import('./pages/admin/EmailCampaignsPage'));
+const EventManager = lazy(() => import('./pages/admin/EventManager'));
+const NewsManager = lazy(() => import('./pages/admin/NewsManager'));
+const TeamManager = lazy(() => import('./pages/admin/TeamManager'));
+const CommunityManager = lazy(() => import('./pages/admin/CommunityManager'));
+const InvestorsManager = lazy(() => import('./pages/admin/InvestorsManager'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
 const PasswordResetPage = lazy(() => import('./pages/PasswordResetPage'));
@@ -174,6 +179,11 @@ function App() {
           <Route path="/admin/contacts" element={<ContactSubmissions />} />
           <Route path="/admin/testimonials" element={<TestimonialManager />} />
           <Route path="/admin/analytics" element={<AnalyticsAdmin />} />
+          <Route path="/admin/events" element={<ProtectedRoute><EventManager /></ProtectedRoute>} />
+          <Route path="/admin/news" element={<ProtectedRoute><NewsManager /></ProtectedRoute>} />
+          <Route path="/admin/team" element={<ProtectedRoute><TeamManager /></ProtectedRoute>} />
+          <Route path="/admin/community" element={<ProtectedRoute><CommunityManager /></ProtectedRoute>} />
+          <Route path="/admin/investors" element={<ProtectedRoute><InvestorsManager /></ProtectedRoute>} />
           <Route path="/industries/ai-ml" element={<AiMlPage />} />
           <Route path="/insights/case-studies" element={<CaseStudiesPage />} />
           <Route path="/insights/events" element={<EventsPage />} />

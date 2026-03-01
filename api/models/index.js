@@ -743,6 +743,117 @@ portfolioProjectSchema.index({ slug: 1 });
 portfolioProjectSchema.index({ category: 1, featured: 1 });
 portfolioProjectSchema.index({ status: 1 });
 
+// Event Schema
+const eventSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  eventType: {
+    type: String,
+    enum: ['webinar', 'meetup', 'hackathon', 'workshop', 'conference'],
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
+  endDate: Date,
+  time: String,
+  duration: String,
+  location: {
+    isVirtual: { type: Boolean, default: true },
+    address: String,
+    city: String,
+    meetingLink: String,
+    platform: String
+  },
+  capacity: {
+    type: Number,
+    default: 100
+  },
+  registered: {
+    type: Number,
+    default: 0
+  },
+  speaker: {
+    name: String,
+    title: String,
+    bio: String,
+    avatar: String
+  },
+  agenda: [{
+    time: String,
+    title: String,
+    description: String
+  }],
+  image: String,
+  tags: [String],
+  status: {
+    type: String,
+    enum: ['draft', 'published', 'cancelled', 'completed'],
+    default: 'draft'
+  },
+  registrations: [{
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    email: String,
+    name: String,
+    registeredAt: { type: Date, default: Date.now }
+  }],
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+}, { timestamps: true });
+
+eventSchema.index({ eventType: 1, date: 1 });
+eventSchema.index({ status: 1, date: 1 });
+
+// Team Member Schema
+const teamMemberSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  role: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  bio: {
+    type: String,
+    default: ''
+  },
+  image: String,
+  email: String,
+  linkedin: String,
+  twitter: String,
+  featured: {
+    type: Boolean,
+    default: false
+  },
+  order: {
+    type: Number,
+    default: 0
+  },
+  department: {
+    type: String,
+    enum: ['leadership', 'engineering', 'design', 'marketing', 'sales', 'support'],
+    default: 'leadership'
+  },
+  status: {
+    type: String,
+    enum: ['active', 'inactive'],
+    default: 'active'
+  }
+}, { timestamps: true });
+
+teamMemberSchema.index({ featured: 1, order: 1 });
+teamMemberSchema.index({ department: 1, status: 1 });
+
 // Create models
 const User = mongoose.model('User', userSchema);
 const BlogPost = mongoose.model('BlogPost', blogPostSchema);
@@ -754,6 +865,8 @@ const EmailCampaign = mongoose.model('EmailCampaign', emailCampaignSchema);
 const Analytics = mongoose.model('Analytics', analyticsSchema);
 const Investor = mongoose.model('Investor', investorSchema);
 const PortfolioProject = mongoose.model('PortfolioProject', portfolioProjectSchema);
+const Event = mongoose.model('Event', eventSchema);
+const TeamMember = mongoose.model('TeamMember', teamMemberSchema);
 
 module.exports = {
   User,
@@ -765,5 +878,7 @@ module.exports = {
   EmailCampaign,
   Analytics,
   Investor,
-  PortfolioProject
+  PortfolioProject,
+  Event,
+  TeamMember
 };
