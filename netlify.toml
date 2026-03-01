@@ -23,67 +23,76 @@
     EMAIL_FROM_ADDRESS = "info@tekvoro.com"
     EMAIL_REPLY_TO = "info@tekvoro.com"
 
-## API Proxy routes MUST come BEFORE the SPA catch-all
-## Health check endpoint
-[[redirects]]
-  from = "/api/health"
-  to = "https://tekvoro-production.up.railway.app/api/health"
-  status = 200
-  force = true
-
-## Proxy remaining API routes to Railway backend
-[[redirects]]
-  from = "/api/*"
-  to = "https://tekvoro-production.up.railway.app/api/:splat"
-  status = 200
-  force = true
-
-## Function redirects (specific endpoints)
+## API Proxy routes - SPECIFIC routes MUST come BEFORE catch-all
+## Function redirects (Netlify Functions - specific endpoints FIRST)
 [[redirects]]
   from = "/api/book-demo"
   to = "/.netlify/functions/book-demo"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/api/subscribe"
   to = "/.netlify/functions/subscribe"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/api/ai-search"
   to = "/.netlify/functions/ai-search"
   status = 200
+  force = true
 
 ## Email system redirects
 [[redirects]]
   from = "/api/email-track/*"
   to = "/.netlify/functions/email-track/:splat"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/api/email-click/*"
   to = "/.netlify/functions/email-track/:splat"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/api/email-analytics"
   to = "/.netlify/functions/email-analytics"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/api/email-templates"
   to = "/.netlify/functions/email-templates"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/api/send-email"
   to = "/.netlify/functions/send-email"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/api/test-sendgrid-domain"
   to = "/.netlify/functions/test-sendgrid-domain"
   status = 200
+  force = true
+
+## Health check endpoint
+[[redirects]]
+  from = "/api/health"
+  to = "https://tekvoro-web-production.up.railway.app/api/health"
+  status = 200
+  force = true
+
+## Proxy ALL remaining API routes to Railway backend (MUST be AFTER specific routes)
+[[redirects]]
+  from = "/api/*"
+  to = "https://tekvoro-web-production.up.railway.app/api/:splat"
+  status = 200
+  force = true
 
 ## SPA catch-all MUST be LAST so it doesn't block API routes
 [[redirects]]
