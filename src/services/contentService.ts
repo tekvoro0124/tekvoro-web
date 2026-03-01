@@ -29,8 +29,9 @@ export interface CaseStudy extends ContentItem {
   duration: string;
 }
 
-// API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// API Configuration - Handle both with and without /api suffix
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5002';
+const API_BASE_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`;
 
 // Dynamic Content Service
 class ContentService {
@@ -40,8 +41,10 @@ class ContentService {
 
   // Generic API request method
   private async apiRequest(endpoint: string, options: RequestInit = {}): Promise<any> {
+    const url = `${API_BASE_URL}${endpoint}`;
     try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      console.log('[ContentService] Fetching:', url);
+      const response = await fetch(url, {
         headers: {
           'Content-Type': 'application/json',
           ...options.headers,
@@ -53,9 +56,11 @@ class ContentService {
         throw new Error(`API request failed: ${response.status}`);
       }
 
-      return await response.json();
+      const data = await response.json();
+      console.log('[ContentService] Response:', data);
+      return data;
     } catch (error) {
-      console.warn(`API request failed for ${endpoint}:`, error);
+      console.warn(`[ContentService] API request failed for ${url}:`, error);
       return null; // Return null to trigger fallback
     }
   }
