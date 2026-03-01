@@ -33,7 +33,7 @@ class AIProcessingService {
       console.error('[AIProcessingService] Error processing article:', error.message);
       return {
         summary: content.substring(0, 200),
-        credibilityEvaluation: { quality: 50, authorExpertise: 50, citations: 50 },
+        credibilityEvaluation: { quality: 50, authorExpertise: 50, citations: 50, warnings: [] },
         keyInsights: [],
         riskFactors: [],
         opportunities: [],

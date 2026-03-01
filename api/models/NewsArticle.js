@@ -95,7 +95,12 @@ const newsArticleSchema = new mongoose.Schema({
   
   // AI Processing
   aiAnalysis: {
-    credibilityEvaluation: String,
+    credibilityEvaluation: {
+      quality: { type: Number, default: 50 },
+      authorExpertise: { type: Number, default: 50 },
+      citations: { type: Number, default: 50 },
+      warnings: { type: [String], default: [] }
+    },
     keyInsights: [String],
     riskFactors: [String],
     opportunities: [String],
