@@ -1,0 +1,48 @@
+{
+  "name": "tekvoro-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Tekvoro website - Dynamic content management system",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:health": "node test-api-health.js",
+    "test:email": "node test-sendgrid.js",
+    "test:e2e": "playwright test",
+    "test:e2e:watch": "playwright test --watch",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:ui": "playwright test --ui",
+    "test:api": "jest --config tests/api/jest.config.js",
+    "test:api:watch": "jest --config tests/api/jest.config.js --watch",
+    "test:api:coverage": "jest --config tests/api/jest.config.js --coverage",
+    "test:security": "jest --config tests/api/jest.config.js tests/api/tests/security.test.js",
+    "test:all": "npm run test:e2e && npm run test:api",
+    "test:coverage": "jest --config tests/api/jest.config.js --coverage && playwright test",
+    "lint": "eslint src --ext ts,tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "framer-motion": "^10.16.0",
+    "lucide-react": "^0.294.0",
+    "axios": "^1.6.0",
+    "date-fns": "^2.30.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0",
+    "tailwindcss": "^3.3.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0",
+    "@tailwindcss/forms": "^0.5.0",
+    "@tailwindcss/typography": "^0.5.0"
+  }
+}
