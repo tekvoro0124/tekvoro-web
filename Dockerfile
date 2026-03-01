@@ -7,14 +7,14 @@ WORKDIR /app
 COPY . .
 
 # Install all dependencies (including dev for build)
-RUN npm install --legacy-peer-deps || true
+RUN npm install --legacy-peer-deps
 
 # Build frontend
 RUN npm run build
 
 # Install production dependencies only
-RUN npm install --production --legacy-peer-deps || true && \
-    cd api && npm install --production --legacy-peer-deps || true && cd ..
+RUN npm install --omit=dev --legacy-peer-deps && \
+    cd api && npm install --omit=dev --legacy-peer-deps && cd ..
 
 # Production stage
 FROM node:18-alpine
