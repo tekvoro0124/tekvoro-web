@@ -3,14 +3,11 @@ FROM node:18-alpine as builder
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy all application code first
+COPY . .
 
 # Install all dependencies (including dev for build)
-RUN npm install --legacy-peer-deps
-
-# Copy application code
-COPY . .
+RUN npm install --legacy-peer-deps || true
 
 # Build frontend
 RUN npm run build
@@ -20,16 +17,12 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY api/package*.json ./api/
+# Copy all files
+COPY . .
 
 # Install production dependencies only
 RUN npm install --production --legacy-peer-deps && \
     cd api && npm install --production --legacy-peer-deps && cd ..
-
-# Copy application code
-COPY . .
 
 # Copy built frontend from builder
 COPY --from=builder /app/dist ./dist
