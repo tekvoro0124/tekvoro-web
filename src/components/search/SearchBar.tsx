@@ -7,9 +7,10 @@ interface SearchBarProps {
   onAdvancedSearch?: () => void;
   placeholder?: string;
   className?: string;
+  centered?: boolean;
 }
 
-const SearchBar = ({ onAdvancedSearch, placeholder = 'Search content...', className = '' }: SearchBarProps) => {
+const SearchBar = ({ onAdvancedSearch, placeholder = 'Search content...', className = '', centered = false }: SearchBarProps) => {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -88,7 +89,9 @@ const SearchBar = ({ onAdvancedSearch, placeholder = 'Search content...', classN
   };
 
   return (
-    <div className={`relative hidden md:block ${className}`} style={{ width: '280px' }}>
+    <div 
+      className={`relative ${centered ? 'w-full max-w-xl mx-auto px-4 sm:px-0' : 'hidden md:block w-[280px]'} ${className}`}
+    >
       {/* Search Input */}
       <div className="relative">
         <input
@@ -99,7 +102,7 @@ const SearchBar = ({ onAdvancedSearch, placeholder = 'Search content...', classN
           onKeyDown={handleKeyDown}
           onFocus={() => query.length > 0 && setIsOpen(true)}
           placeholder={placeholder}
-          className="w-full px-4 py-2 bg-white/90 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm pr-12 transition-all"
+          className={`w-full bg-white/90 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${centered ? 'px-5 py-3 text-base pr-14 shadow-lg' : 'px-4 py-2 text-sm pr-12'}`}
         />
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
           {isLoading && <Loader size={16} className="animate-spin text-gray-400" />}

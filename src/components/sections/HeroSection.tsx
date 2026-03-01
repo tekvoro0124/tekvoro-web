@@ -5,6 +5,7 @@ import Scene from '../Scene';
 import type { ZoneKey } from '../Scene';
 import { ArrowRight, Award, LayoutDashboard } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SearchBar from '../search/SearchBar';
 
 const ZONES: { key: ZoneKey; title: string; desc: string }[] = [
   { key: 'office', title: 'Office Zone', desc: 'Desks, PCs, Tekvoro intro stats' },
@@ -58,6 +59,13 @@ function getZoneOverlay(zone: ZoneKey) {
             <Award className="w-5 h-5 text-yellow-500 animate-bounce" />
             Meet Our Investors
           </Link>
+          {/* Centered Search Box */}
+          <div className="mt-8 sm:mt-10 w-full">
+            <SearchBar 
+              centered 
+              placeholder="Search solutions, services, insights..." 
+            />
+          </div>
         </div>
       );
     case 'conference':
