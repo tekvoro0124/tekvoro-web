@@ -389,4 +389,79 @@ router.post('/init-admin', async (req, res) => {
   }
 });
 
+// Create or update admin user with secret (for production setup)
+router.post('/setup-admin', async (req, res) => {
+  try {
+    const { email, password, name, secret } = req.body;
+    const ADMIN_SECRET = process.env.ADMIN_SECRET || 'tekvoro-admin-2024';
+    
+    // Validate secret
+    if (secret !== ADMIN_SECRET) {
+      return res.status(403).json({ error: 'Invalid admin secret' });
+    }
+
+    if (!email || !password || !name) {
+      return res.status(400).json({ error: 'Email, password, and name are required' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_ROUNDS) || 12);
+
+    // Check if user exists
+    const existingUser = await User.findOne({ email });
+    
+    if (existingUser) {
+      // Update existing user to admin
+      existingUser.name = name;
+      existingUser.password = hashedPassword;
+      existingUser.role = 'admin';
+      existingUser.status = 'active';
+      await existingUser.save();
+      
+      const token = generateToken(existingUser);
+      
+      return res.json({
+        success: true,
+        message: 'Admin user updated successfully',
+        user: {
+          id: existingUser._id,
+          email: existingUser.email,
+          name: existingUser.name,
+          role: existingUser.role
+        },
+        token
+      });
+    }
+
+    // Create new admin user
+    const adminUser = new User({
+      email,
+      name,
+      password: hashedPassword,
+      role: 'admin',
+      status: 'active'
+    });
+
+    await adminUser.save();
+
+    const token = generateToken(adminUser);
+
+    res.status(201).json({
+      success: true,
+      message: 'Admin user created successfully',
+      user: {
+        id: adminUser._id,
+        email: adminUser.email,
+        name: adminUser.name,
+        role: adminUser.role
+      },
+      token
+    });
+
+  } catch (error) {
+    console.error('Admin setup error:', error);
+    res.status(500).json({ error: 'Failed to setup admin' });
+  }
+});
+
 module.exports = router;

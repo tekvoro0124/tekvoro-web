@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// API Configuration - Handle both with and without /api suffix
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5002';
+const API_BASE_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`;
 
 // Authentication Service
 class AuthService {
