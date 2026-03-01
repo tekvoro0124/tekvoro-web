@@ -51,6 +51,8 @@ const AdminSidebar = ({ isOpen, closeSidebar }: AdminSidebarProps) => {
       label: 'Business',
       items: [
         { name: 'Investors', path: '/admin/investors', icon: Building },
+        { name: 'Demo Bookings', path: '/admin/demo-bookings', icon: Calendar },
+        { name: 'Support Center', path: '/admin/support', icon: MessageSquare },
       ],
     },
     {
